@@ -1,0 +1,15 @@
+Regras de negócio
+
+O sistema CRUD foi desenvolvido para uma biblioteca que também faz empréstimos de livros.
+
+As regras de negócio são as seguintes:
+
+1) Cada livro deve ter um título, um autor e um ISBN único de 13 dígitos.
+2) Nenhum dos campos do livro pode ser nulo ou vazio.
+3) O acervo contém apenas um exemplar de cada livro.
+2) O sistema de empréstimo deve registrar a data do empréstimo e a data prevista para devolução.
+5) O prazo de empréstimo gratuito é de até 10 dias corridos, a partir da data do empréstimo.
+6) Caso o cliente queira devolver o livro após o prazo de 10 dias, será cobrado um valor fixo de R$ 5,00 + R$ 0,50 por dia, a partir do 11º dia.
+7) O sistema deve permitir o cadastro de novos livros, a consulta de livros por id, título e autor,
+a atualização de informações dos livros cadastrados e a exclusão de livros do sistema.
+8) O sistema deve permitir o registro de empréstimos e devoluções de livros, além da consulta de livros que estão emprestados.
