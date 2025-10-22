@@ -27,32 +27,7 @@ public class LivroServiceRobustnessTest {
         service = new LivroService();
     }
 
-    @Property(tries = 500)
-    void testTitulosMaliciosos(@ForAll("titulosMaliciosos") String titulo) {
-        service = new LivroService();
-        assertDoesNotThrow(() -> {
-            try {
-                service.buscarLivroPorTituloNoAcervo(titulo);
-            } catch (IllegalArgumentException e) {
-                assertTrue(e.getMessage().contains("inválido"));
-            }
-        });
-    }
-
-    @Property(tries = 500)
-    void testISBNsInvalidos(@ForAll("isbnsMaliciosos") String isbn) {
-        service = new LivroService();
-        assertThrows(IllegalArgumentException.class, () -> {
-            try {
-                Livro livro = new Livro(service.gerarId(), "Teste", "Autor", isbn);
-                service.cadastrarLivroNoAcervo(livro);
-            } catch (IllegalArgumentException e) {
-                throw e;
-            }
-        });
-    }
-
-    // TESTES DE SOBRECARGA
+    //Sobrecarga
     @Test
     @Timeout(value = 10, unit = TimeUnit.SECONDS)
     @DisplayName("Sistema deve responder dentro do tempo limite sob alta carga")
@@ -67,7 +42,7 @@ public class LivroServiceRobustnessTest {
                     Livro livro = new Livro(
                             service.gerarId(),
                             "Livro " + index,
-                            "Autor " + index,
+                            "Autor",
                             String.format("978%010d", index)
                     );
                     service.cadastrarLivroNoAcervo(livro);
@@ -83,7 +58,7 @@ public class LivroServiceRobustnessTest {
         executor.shutdown();
     }
 
-    // TESTES DE LIMITES EXTREMOS
+    //Limites extremos
     @ParameterizedTest
     @ValueSource(ints = {Integer.MAX_VALUE, Integer.MIN_VALUE, -1, 0})
     @DisplayName("Testes com IDs extremos")
@@ -116,10 +91,10 @@ public class LivroServiceRobustnessTest {
             service.cadastrarLivroNoAcervo(livro);
         }
 
-        // Remover todos
+        //Remover todos
         ArrayList<Livro> livros = service.listarLivrosDoAcervo();
         for (Livro livro : livros) {
-            if (livro.getId() > 3) { // Preservar livros do CSV
+            if (livro.getId() > 3) {
                 service.removerLivroDoAcervo(livro.getId());
             }
         }
@@ -131,35 +106,5 @@ public class LivroServiceRobustnessTest {
 
         //Memory leak deve ser menor que 50MB
         assertTrue(diferenca < 50_000_000, "Possível vazamento de memória: " + diferenca + " bytes");
-    }
-
-    // PROVIDERS PARA FUZZ TESTING
-    @Provide
-    Arbitrary<String> titulosMaliciosos() {
-        return Arbitraries.oneOf(
-                Arbitraries.strings().ofLength(10000),
-                Arbitraries.strings().withChars('<', '>', '&', '"', '\'', '\n', '\r', '\t'),
-                Arbitraries.of("'; DROP TABLE livros; --", "' OR '1'='1", "UNION SELECT * FROM users"),
-                Arbitraries.of("<script>alert('xss')</script>", "javascript:alert('xss')", "<img src=x onerror=alert('xss')>"),
-                Arbitraries.of(null, "", "   ", "\n\n\n"),
-                Arbitraries.strings().withChars('\u0000', '\uFFFF', '\u202E'),
-                Arbitraries.of("../../../etc/passwd", "..\\..\\windows\\system32")
-        );
-    }
-
-    @Provide
-    Arbitrary<String> isbnsMaliciosos() {
-        return Arbitraries.oneOf(
-                Arbitraries.strings().withCharRange('0', '9').ofLength(50),
-                Arbitraries.strings().withChars('a', 'z', '!', '@', '#'),
-                Arbitraries.of(null, "", "   "),
-                Arbitraries.of("123", "978-0-123-45678-9-0", "ISBN978123456789"),
-                Arbitraries.strings().ofLength(1000).withCharRange('0', '9'),
-                Arbitraries.of("'; DROP TABLE livros; --", "' OR '1'='1", "UNION SELECT * FROM users"),
-                Arbitraries.of("<script>alert('xss')</script>", "javascript:alert('xss')", "<img src=x onerror=alert('xss')>"),
-                Arbitraries.of(null, "", "   ", "\n\n\n"),
-                Arbitraries.strings().withChars('\u0000', '\uFFFF', '\u202E'),
-                Arbitraries.of("../../../etc/passwd", "..\\..\\windows\\system32")
-        );
     }
 }

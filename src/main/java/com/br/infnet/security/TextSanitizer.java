@@ -13,10 +13,6 @@ public class TextSanitizer {
     private static final Pattern PADRAO_HTML_TAGS = Pattern.compile("<[^>]+>");
     private static final Pattern PADRAO_SQL_COMMENTS = Pattern.compile("--.*$|/\\*.*?\\*/", Pattern.DOTALL | Pattern.MULTILINE);
 
-    //Padrões para caracteres especiais perigosos
-    private static final Pattern PADRAO_ASPAS_PERIGOSAS = Pattern.compile("['\";]");
-    private static final Pattern PADRAO_SIMBOLOS_PERIGOSOS = Pattern.compile("[<>&\"']");
-
     private TextSanitizer() {
         // Previne instanciação
     }
@@ -32,7 +28,7 @@ public class TextSanitizer {
                 PADRAO_INJECAO_SQL.matcher(input).find() ||
                 PADRAO_PATH_TRAVERSAL.matcher(input).find() ||
                 PADRAO_CARACTERES_CONTROLE.matcher(input).find() ||
-                input.trim().isEmpty() && !input.isEmpty() || // Apenas espaços
+                input.trim().isEmpty() && !input.isEmpty() ||
                 input.contains("UNION SELECT") ||
                 input.contains("OR '1'='1") ||
                 input.contains("<img") ||
