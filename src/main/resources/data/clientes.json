@@ -1,0 +1,77 @@
+[
+  {
+    "nome": "Rodrigo Loureiro",
+    "email": "rodrigo.cloureiro@al.infnet.edu.br",
+    "cpf": "90393445070",
+    "numeroTelefone": "21993187335",
+    "endereco": {
+      "logradouro": "Travessa Doutor Amélia Pinheiro",
+      "numero": "471",
+      "bairro": "Manguinhos",
+      "cidade": "Rio de Janeiro",
+      "uf": "RJ",
+      "cep": "21050180"
+    },
+    "dataNascimento": "2000-05-15T00:00:00Z"
+  },
+  {
+    "nome": "Nelson Grossoni",
+    "email": "nelson.ljunior@al.infnet.edu.br",
+    "cpf": "45609995701",
+    "numeroTelefone": "24988916770",
+    "endereco": {
+      "logradouro": "Estrada Jerônimo Ferreira Alves",
+      "numero": "851",
+      "bairro": "Itaipava",
+      "cidade": "Petrópolis",
+      "uf": "RJ",
+      "cep": "25740040"
+    },
+    "dataNascimento": "2000-09-22T00:00:00Z"
+  },
+  {
+    "nome": "Larissa Conti",
+    "email": "larissa.barros@al.infnet.edu.br",
+    "cpf": "43636056778",
+    "numeroTelefone": "21985606821",
+    "endereco": {
+      "logradouro": "Rua João Primo",
+      "numero": "958",
+      "bairro": "Penha",
+      "cidade": "Rio de Janeiro",
+      "uf": "RJ",
+      "cep": "21072752"
+    },
+    "dataNascimento": "2000-12-01T00:00:00Z"
+  },
+  {
+    "nome": "Maria Luiza",
+    "email": "maria.costa@al.infnet.edu.br",
+    "cpf": "60051160706",
+    "numeroTelefone": "21984287798",
+    "endereco": {
+      "logradouro": "Estrada do Tindiba",
+      "numero": "279",
+      "bairro": "Taquara",
+      "cidade": "Rio de Janeiro",
+      "uf": "RJ",
+      "cep": "22725422"
+    },
+    "dataNascimento": "2000-03-10T00:00:00Z"
+  },
+  {
+    "nome": "Fernando Fontes",
+    "email": "fernando.fontes@al.infnet.edu.br",
+    "cpf": "10938123700",
+    "numeroTelefone": "21982526211",
+    "endereco": {
+      "logradouro": "Praça Tedim Cerqueira",
+      "numero": "494",
+      "bairro": "Freguesia (Jacarepaguá)",
+      "cidade": "Rio de Janeiro",
+      "uf": "RJ",
+      "cep": "22745260"
+    },
+    "dataNascimento": "2000-07-30T00:00:00Z"
+  }
+]
