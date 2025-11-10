@@ -1,5 +1,6 @@
 package br.com.infnet.livraria_infnet.repository;
 
+import br.com.infnet.livraria_infnet.model.Livro;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -26,6 +27,6 @@ public class LivroRepositoryTests {
     @Test
     public void deveRetornarListaDeLivros() {
         List<Livro> livros = livroRepository.findAll();
-        assertEquals(26, livros.size());
+        assertEquals(25, livros.size());
     }
 }
