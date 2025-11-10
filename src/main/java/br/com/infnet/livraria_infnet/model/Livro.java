@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
+@Getter
 @ToString
 public class Livro {
     private final String titulo;
