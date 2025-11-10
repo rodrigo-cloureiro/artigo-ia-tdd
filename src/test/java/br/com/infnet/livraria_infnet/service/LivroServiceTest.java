@@ -3,7 +3,9 @@ package br.com.infnet.livraria_infnet.service;
 import br.com.infnet.livraria_infnet.model.Livro;
 import br.com.infnet.livraria_infnet.repository.LivroRepository;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,11 +13,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class LivroServiceTest {
     private Livro livro;
     @Mock
     private LivroRepository livroRepository;
-    @InjectMocks
     private LivroService livroService;
 
     @BeforeEach
@@ -27,6 +29,7 @@ public class LivroServiceTest {
                 BigDecimal.valueOf(93.10),
                 10,
                 true);
+        livroService = new LivroServiceImpl(livroRepository);
     }
 
     @AfterEach
