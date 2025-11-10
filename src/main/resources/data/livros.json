@@ -1,0 +1,202 @@
+[
+  {
+    "titulo": "Dom Casmurro",
+    "autor": "Machado de Assis",
+    "isbn": "9788525406360",
+    "preco": 18.75,
+    "quantidade": 4,
+    "ativo": true
+  },
+  {
+    "titulo": "O Cortiço",
+    "autor": "Aluísio Azevedo",
+    "isbn": "9788594318602",
+    "preco": 20.99,
+    "quantidade": 3,
+    "ativo": true
+  },
+  {
+    "titulo": "1984",
+    "autor": "George Orwell",
+    "isbn": "9788535914849",
+    "preco": 35.8,
+    "quantidade": 1,
+    "ativo": true
+  },
+  {
+    "titulo": "O Pequeno Príncipe",
+    "autor": "Antoine de Saint-Exupéry",
+    "isbn": "9788595081413",
+    "preco": 63.8,
+    "quantidade": 1,
+    "ativo": true
+  },
+  {
+    "titulo": "Memórias Póstumas de Brás Cubas",
+    "autor": "Machado de Assis",
+    "isbn": "9788535909739",
+    "preco": 35,
+    "quantidade": 6,
+    "ativo": true
+  },
+  {
+    "titulo": "O Ateneu",
+    "autor": "Raul Pompéia",
+    "isbn": "9788525407177",
+    "preco": 31.75,
+    "quantidade": 3,
+    "ativo": true
+  },
+  {
+    "titulo": "Iracema",
+    "autor": "José de Alencar",
+    "isbn": "9788594318930",
+    "preco": 14.95,
+    "quantidade": 2,
+    "ativo": true
+  },
+  {
+    "titulo": "A Moreninha",
+    "autor": "Joaquim Manuel de Macedo",
+    "isbn": "9788535928020",
+    "preco": 21.45,
+    "quantidade": 2,
+    "ativo": true
+  },
+  {
+    "titulo": "Senhora",
+    "autor": "José de Alencar",
+    "isbn": "9788535914924",
+    "preco": 27.9,
+    "quantidade": 5,
+    "ativo": true
+  },
+  {
+    "titulo": "Quincas Borba",
+    "autor": "Machado de Assis",
+    "isbn": "9788535909746",
+    "preco": 22,
+    "quantidade": 4,
+    "ativo": true
+  },
+  {
+    "titulo": "Casa-Grande & Senzala",
+    "autor": "Gilberto Freyre",
+    "isbn": "9788520934579",
+    "preco": 30,
+    "quantidade": 3,
+    "ativo": true
+  },
+  {
+    "titulo": "Capitães da Areia",
+    "autor": "Jorge Amado",
+    "isbn": "9788535918243",
+    "preco": 25.5,
+    "quantidade": 2,
+    "ativo": true
+  },
+  {
+    "titulo": "O Auto da Compadecida",
+    "autor": "Ariano Suassuna",
+    "isbn": "9788520934456",
+    "preco": 70.5,
+    "quantidade": 1,
+    "ativo": true
+  },
+  {
+    "titulo": "Gabriela, Cravo e Canela",
+    "autor": "Jorge Amado",
+    "isbn": "9788535918236",
+    "preco": 45,
+    "quantidade": 2,
+    "ativo": true
+  },
+  {
+    "titulo": "Vidas Secas",
+    "autor": "Graciliano Ramos",
+    "isbn": "9788535909722",
+    "preco": 22.45,
+    "quantidade": 5,
+    "ativo": true
+  },
+  {
+    "titulo": "São Bernardo",
+    "autor": "Graciliano Ramos",
+    "isbn": "9788535909715",
+    "preco": 33.35,
+    "quantidade": 2,
+    "ativo": true
+  },
+  {
+    "titulo": "A Hora da Estrela",
+    "autor": "Clarice Lispector",
+    "isbn": "9788535918267",
+    "preco": 29.9,
+    "quantidade": 4,
+    "ativo": true
+  },
+  {
+    "titulo": "O Guarani",
+    "autor": "José de Alencar",
+    "isbn": "9788535914917",
+    "preco": 19.8,
+    "quantidade": 3,
+    "ativo": true
+  },
+  {
+    "titulo": "Helena",
+    "autor": "Machado de Assis",
+    "isbn": "9788535909753",
+    "preco": 47.8,
+    "quantidade": 1,
+    "ativo": true
+  },
+  {
+    "titulo": "Macunaíma",
+    "autor": "Mário de Andrade",
+    "isbn": "9788535918274",
+    "preco": 22.6,
+    "quantidade": 2,
+    "ativo": true
+  },
+  {
+    "titulo": "O Mulato",
+    "autor": "Aluísio Azevedo",
+    "isbn": "9788594318619",
+    "preco": 18.2,
+    "quantidade": 3,
+    "ativo": true
+  },
+  {
+    "titulo": "Triste Fim de Policarpo Quaresma",
+    "autor": "Lima Barreto",
+    "isbn": "9788535918250",
+    "preco": 41.8,
+    "quantidade": 2,
+    "ativo": true
+  },
+  {
+    "titulo": "A Bagaceira",
+    "autor": "José Américo de Almeida",
+    "isbn": "9788594318626",
+    "preco": 32.6,
+    "quantidade": 3,
+    "ativo": true
+  },
+  {
+    "titulo": "O Primo Basílio",
+    "autor": "Eça de Queirós",
+    "isbn": "9788535914900",
+    "preco": 29.95,
+    "quantidade": 4,
+    "ativo": true
+  },
+  {
+    "titulo": "Os Maias",
+    "autor": "Eça de Queirós",
+    "isbn": "9788535914893",
+    "preco": 31.75,
+    "quantidade": 5,
+    "ativo": true
+  }
+]
