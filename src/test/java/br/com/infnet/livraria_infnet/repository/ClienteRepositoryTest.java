@@ -1,5 +1,6 @@
 package br.com.infnet.livraria_infnet.repository;
 
+import br.com.infnet.livraria_infnet.model.Cliente;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
