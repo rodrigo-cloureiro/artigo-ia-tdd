@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class LivroRepositoryImpl implements LivroRepository {
@@ -20,6 +21,13 @@ public class LivroRepositoryImpl implements LivroRepository {
     @Override
     public List<Livro> findAll() {
         return Collections.unmodifiableList(livros);
+    }
+
+    @Override
+    public Optional<Livro> findByIsbn(String isbn) {
+        return livros.stream()
+                .filter(livro -> livro.getIsbn().equals(isbn))
+                .findFirst();
     }
 
     private List<Livro> initLivros() {
