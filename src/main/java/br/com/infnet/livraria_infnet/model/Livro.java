@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 public class Livro {
     private final String titulo;
     private final String autor;
+    private final String capa;
     private final String isbn;
     private final BigDecimal preco;
     private final int quantidade;
@@ -20,6 +21,7 @@ public class Livro {
     public Livro(
             @JsonProperty("titulo") String titulo,
             @JsonProperty("autor") String autor,
+            @JsonProperty("capa") String capa,
             @JsonProperty("isbn") String isbn,
             @JsonProperty("preco") BigDecimal preco,
             @JsonProperty("quantidade") int quantidade,
@@ -27,6 +29,7 @@ public class Livro {
     ) {
         this.titulo = titulo;
         this.autor = autor;
+        this.capa = capa;
         this.isbn = isbn;
         this.preco = preco;
         this.quantidade = quantidade;

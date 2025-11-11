@@ -2,7 +2,8 @@
   {
     "titulo": "Dom Casmurro",
     "autor": "Machado de Assis",
-    "isbn": "9788525406360",
+    "capa": "https://m.media-amazon.com/images/I/61x1ZHomWUL._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9788594318602",
     "preco": 18.75,
     "quantidade": 4,
     "ativo": true
@@ -10,7 +11,8 @@
   {
     "titulo": "O Cortiço",
     "autor": "Aluísio Azevedo",
-    "isbn": "9788594318602",
+    "capa": "https://m.media-amazon.com/images/I/81tpHtxgSML._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9788578886431",
     "preco": 20.99,
     "quantidade": 3,
     "ativo": true
@@ -18,7 +20,8 @@
   {
     "titulo": "1984",
     "autor": "George Orwell",
-    "isbn": "9788535914849",
+    "capa": "https://m.media-amazon.com/images/I/61t0bwt1s3L._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9786555522266",
     "preco": 35.8,
     "quantidade": 1,
     "ativo": true
@@ -26,7 +29,8 @@
   {
     "titulo": "O Pequeno Príncipe",
     "autor": "Antoine de Saint-Exupéry",
-    "isbn": "9788595081413",
+    "capa": "https://m.media-amazon.com/images/I/81TmOZIXvzL._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9788595081512",
     "preco": 63.8,
     "quantidade": 1,
     "ativo": true
@@ -34,7 +38,8 @@
   {
     "titulo": "Memórias Póstumas de Brás Cubas",
     "autor": "Machado de Assis",
-    "isbn": "9788535909739",
+    "capa": "https://m.media-amazon.com/images/I/71OL9RU2tJL._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9788594318619",
     "preco": 35,
     "quantidade": 6,
     "ativo": true
@@ -42,7 +47,8 @@
   {
     "titulo": "O Ateneu",
     "autor": "Raul Pompéia",
-    "isbn": "9788525407177",
+    "capa": "https://m.media-amazon.com/images/I/61z2rdrO1bL._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9788563560629",
     "preco": 31.75,
     "quantidade": 3,
     "ativo": true
@@ -50,7 +56,8 @@
   {
     "titulo": "Iracema",
     "autor": "José de Alencar",
-    "isbn": "9788594318930",
+    "capa": "https://m.media-amazon.com/images/I/71iZ7iMqZ1L._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9788578885250",
     "preco": 14.95,
     "quantidade": 2,
     "ativo": true
@@ -58,7 +65,8 @@
   {
     "titulo": "A Moreninha",
     "autor": "Joaquim Manuel de Macedo",
-    "isbn": "9788535928020",
+    "capa": "https://m.media-amazon.com/images/I/21x87rLuhfL._AC_UL620_FMwebp_QL65_.jpg",
+    "isbn": "9788598559063",
     "preco": 21.45,
     "quantidade": 2,
     "ativo": true
@@ -66,7 +74,8 @@
   {
     "titulo": "Senhora",
     "autor": "José de Alencar",
-    "isbn": "9788535914924",
+    "capa": "https://m.media-amazon.com/images/I/711tJRe6LML._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9786555520767",
     "preco": 27.9,
     "quantidade": 5,
     "ativo": true
@@ -74,7 +83,8 @@
   {
     "titulo": "Quincas Borba",
     "autor": "Machado de Assis",
-    "isbn": "9788535909746",
+    "capa": "https://m.media-amazon.com/images/I/61Kt3d+mhuL._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9788594318855",
     "preco": 22,
     "quantidade": 4,
     "ativo": true
@@ -82,7 +92,8 @@
   {
     "titulo": "Casa-Grande & Senzala",
     "autor": "Gilberto Freyre",
-    "isbn": "9788520934579",
+    "capa": "https://m.media-amazon.com/images/I/91pNT9IAIpL._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9788526008694",
     "preco": 30,
     "quantidade": 3,
     "ativo": true
@@ -90,7 +101,8 @@
   {
     "titulo": "Capitães da Areia",
     "autor": "Jorge Amado",
-    "isbn": "9788535918243",
+    "capa": "https://m.media-amazon.com/images/I/81t7altQZxL._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9788535914061",
     "preco": 25.5,
     "quantidade": 2,
     "ativo": true
@@ -98,7 +110,8 @@
   {
     "titulo": "O Auto da Compadecida",
     "autor": "Ariano Suassuna",
-    "isbn": "9788520934456",
+    "capa": "https://m.media-amazon.com/images/I/71TTwf2v6KL._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9788520938393",
     "preco": 70.5,
     "quantidade": 1,
     "ativo": true
@@ -106,7 +119,8 @@
   {
     "titulo": "Gabriela, Cravo e Canela",
     "autor": "Jorge Amado",
-    "isbn": "9788535918236",
+    "capa": "https://m.media-amazon.com/images/I/81IyZdXmUqL._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9788535920987",
     "preco": 45,
     "quantidade": 2,
     "ativo": true
@@ -114,7 +128,8 @@
   {
     "titulo": "Vidas Secas",
     "autor": "Graciliano Ramos",
-    "isbn": "9788535909722",
+    "capa": "https://m.media-amazon.com/images/I/71NYL2AbBIL._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9788501114785",
     "preco": 22.45,
     "quantidade": 5,
     "ativo": true
@@ -122,7 +137,8 @@
   {
     "titulo": "São Bernardo",
     "autor": "Graciliano Ramos",
-    "isbn": "9788535909715",
+    "capa": "https://m.media-amazon.com/images/I/71utqM0TO1L._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9786550971335",
     "preco": 33.35,
     "quantidade": 2,
     "ativo": true
@@ -130,7 +146,8 @@
   {
     "titulo": "A Hora da Estrela",
     "autor": "Clarice Lispector",
-    "isbn": "9788535918267",
+    "capa": "https://m.media-amazon.com/images/I/61TaHURu27L._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9786555320350",
     "preco": 29.9,
     "quantidade": 4,
     "ativo": true
@@ -138,7 +155,8 @@
   {
     "titulo": "O Guarani",
     "autor": "José de Alencar",
-    "isbn": "9788535914917",
+    "capa": "https://m.media-amazon.com/images/I/51B8hCc2opL._SY445_SX342_ML2_.jpg",
+    "isbn": "9788594318848",
     "preco": 19.8,
     "quantidade": 3,
     "ativo": true
@@ -146,7 +164,8 @@
   {
     "titulo": "Helena",
     "autor": "Machado de Assis",
-    "isbn": "9788535909753",
+    "capa": "https://m.media-amazon.com/images/I/61KDbIA7t6L._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9786555522525",
     "preco": 47.8,
     "quantidade": 1,
     "ativo": true
@@ -154,7 +173,8 @@
   {
     "titulo": "Macunaíma",
     "autor": "Mário de Andrade",
-    "isbn": "9788535918274",
+    "capa": "https://m.media-amazon.com/images/I/71kADstk2gL._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9788581863368",
     "preco": 22.6,
     "quantidade": 2,
     "ativo": true
@@ -162,7 +182,8 @@
   {
     "titulo": "O Mulato",
     "autor": "Aluísio Azevedo",
-    "isbn": "9788594318619",
+    "capa": "https://m.media-amazon.com/images/I/611ahngu8HL._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9786555520484",
     "preco": 18.2,
     "quantidade": 3,
     "ativo": true
@@ -170,7 +191,8 @@
   {
     "titulo": "Triste Fim de Policarpo Quaresma",
     "autor": "Lima Barreto",
-    "isbn": "9788535918250",
+    "capa": "https://m.media-amazon.com/images/I/61cjWp2TRaS._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9788563560179",
     "preco": 41.8,
     "quantidade": 2,
     "ativo": true
@@ -178,7 +200,8 @@
   {
     "titulo": "A Bagaceira",
     "autor": "José Américo de Almeida",
-    "isbn": "9788594318626",
+    "capa": "https://m.media-amazon.com/images/I/81qzwfObt3L._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9788503012997",
     "preco": 32.6,
     "quantidade": 3,
     "ativo": true
@@ -186,7 +209,8 @@
   {
     "titulo": "O Primo Basílio",
     "autor": "Eça de Queirós",
-    "isbn": "9788535914900",
+    "capa": "http://m.media-amazon.com/images/I/91VZyPUMAYL._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9788582850169",
     "preco": 29.95,
     "quantidade": 4,
     "ativo": true
@@ -194,7 +218,8 @@
   {
     "titulo": "Os Maias",
     "autor": "Eça de Queirós",
-    "isbn": "9788535914893",
+    "capa": "https://m.media-amazon.com/images/I/A1O5mt6s1oL._AC_UL640_FMwebp_QL65_.jpg",
+    "isbn": "9788537816851",
     "preco": 31.75,
     "quantidade": 5,
     "ativo": true
