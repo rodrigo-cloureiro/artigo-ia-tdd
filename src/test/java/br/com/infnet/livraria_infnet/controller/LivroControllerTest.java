@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -46,6 +47,16 @@ public class LivroControllerTest {
     public void deveRetornarLivrosAtivosComSucesso() {
         when(livroService.listar()).thenReturn(List.of(livro));
         List<Livro> livros = livroController.listar();
+
         assertEquals(1, livros.size());
+    }
+
+    @Test
+    public void deveRetornarLivroPorIsbnComSucesso() {
+        when(livroService.buscarPorIsbn("9788576082675")).thenReturn(Optional.ofNullable(livro));
+        Optional<Livro> livroOptional = livroController.buscarPorIsbn("9788576082675");
+
+        assertTrue(livroOptional.isPresent());
+        assertTrue(livroOptional.get().getTitulo().contains("Código Limpo"));
     }
 }

@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -48,5 +49,14 @@ public class LivroServiceTest {
 
         assertEquals(1, livros.size());
         assertEquals("9788575227244", livros.getFirst().getIsbn());
+    }
+
+    @Test
+    public void deveRetornarLivroPorIsbn() {
+        when(livroRepository.findByIsbn("9788575227244")).thenReturn(Optional.ofNullable(livro));
+        Optional<Livro> livroOpional = livroService.buscarPorIsbn("9788575227244");
+
+        assertTrue(livroOpional.isPresent());
+        assertEquals("Martin Fowler", livroOpional.get().getAutor());
     }
 }

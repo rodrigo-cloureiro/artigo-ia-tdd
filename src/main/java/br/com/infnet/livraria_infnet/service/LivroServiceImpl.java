@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,5 +19,14 @@ public class LivroServiceImpl implements LivroService {
                 .stream()
                 .filter(Livro::isAtivo)
                 .toList();
+    }
+
+    @Override
+    public Optional<Livro> buscarPorIsbn(String isbn) {
+        return livroRepository.findByIsbn(cleanup(isbn));
+    }
+
+    private String cleanup(String isbn) {
+        return isbn.replaceAll("[^0-9]", "");
     }
 }
