@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -62,5 +63,14 @@ public class ClienteServiceTest {
 
         assertEquals(1, clientes.size());
         assertEquals("Vitor Amadeu", clientes.getFirst().getNome());
+    }
+
+    @Test
+    public void deveRetornarClienteComBaseNoCpf() {
+        when(clienteRepository.findByCpf("90030848741")).thenReturn(Optional.of(cliente));
+        Optional<Cliente> clienteOptional = clienteService.buscarPorCpf("900.308.487-41");
+
+        assertTrue(clienteOptional.isPresent());
+        assertEquals("Vitor Amadeu", clienteOptional.get().getNome());
     }
 }
