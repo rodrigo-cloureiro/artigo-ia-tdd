@@ -7,12 +7,14 @@
     "endereco": {
       "logradouro": "Travessa Doutor Amélia Pinheiro",
       "numero": "471",
+      "complemento": "APT 101",
       "bairro": "Manguinhos",
       "cidade": "Rio de Janeiro",
       "uf": "RJ",
       "cep": "21050180"
     },
-    "dataNascimento": "2000-05-15T00:00:00Z"
+    "dataNascimento": "2000-05-15T00:00:00Z",
+    "ativo": true
   },
   {
     "nome": "Nelson Grossoni",
@@ -22,12 +24,14 @@
     "endereco": {
       "logradouro": "Estrada Jerônimo Ferreira Alves",
       "numero": "851",
+      "complemento": "BL 2 APT 407",
       "bairro": "Itaipava",
       "cidade": "Petrópolis",
       "uf": "RJ",
       "cep": "25740040"
     },
-    "dataNascimento": "2000-09-22T00:00:00Z"
+    "dataNascimento": "2000-09-22T00:00:00Z",
+    "ativo": true
   },
   {
     "nome": "Larissa Conti",
@@ -37,12 +41,14 @@
     "endereco": {
       "logradouro": "Rua João Primo",
       "numero": "958",
+      "complemento": "APT 707",
       "bairro": "Penha",
       "cidade": "Rio de Janeiro",
       "uf": "RJ",
       "cep": "21072752"
     },
-    "dataNascimento": "2000-12-01T00:00:00Z"
+    "dataNascimento": "2000-12-01T00:00:00Z",
+    "ativo": true
   },
   {
     "nome": "Maria Luiza",
@@ -52,12 +58,14 @@
     "endereco": {
       "logradouro": "Estrada do Tindiba",
       "numero": "279",
+      "complemento": "BL 1 APT 404",
       "bairro": "Taquara",
       "cidade": "Rio de Janeiro",
       "uf": "RJ",
       "cep": "22725422"
     },
-    "dataNascimento": "2000-03-10T00:00:00Z"
+    "dataNascimento": "2000-03-10T00:00:00Z",
+    "ativo": true
   },
   {
     "nome": "Fernando Fontes",
@@ -67,11 +75,13 @@
     "endereco": {
       "logradouro": "Praça Tedim Cerqueira",
       "numero": "494",
+      "complemento": "BL 3 APT 303",
       "bairro": "Freguesia (Jacarepaguá)",
       "cidade": "Rio de Janeiro",
       "uf": "RJ",
       "cep": "22745260"
     },
-    "dataNascimento": "2000-07-30T00:00:00Z"
+    "dataNascimento": "2000-07-30T00:00:00Z",
+    "ativo": true
   }
 ]

@@ -15,6 +15,7 @@ public class Cliente {
     private final String numeroTelefone;
     private final Endereco endereco;
     private final Date dataNascimento;
+    private final boolean ativo;
 
     @JsonCreator
     public Cliente(
@@ -23,7 +24,8 @@ public class Cliente {
             @JsonProperty("cpf") String cpf,
             @JsonProperty("numeroTelefone") String numeroTelefone,
             @JsonProperty("endereco") Endereco endereco,
-            @JsonProperty("dataNascimento") Date dataNascimento
+            @JsonProperty("dataNascimento") Date dataNascimento,
+            @JsonProperty("ativo") boolean ativo
     ) {
         this.nome = nome;
         this.email = email;
@@ -31,5 +33,6 @@ public class Cliente {
         this.numeroTelefone = numeroTelefone;
         this.endereco = endereco;
         this.dataNascimento = dataNascimento;
+        this.ativo = ativo;
     }
 }
