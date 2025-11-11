@@ -12,6 +12,8 @@ public interface LivroRepository {
 
     Optional<Livro> findByIsbn(String isbn);
 
+    Livro update(String isbn, Livro livroAtualizado);
+
     void remove(Livro livro);
 
     void removeByIsbn(String isbn);

@@ -37,6 +37,13 @@ public class LivroRepositoryImpl implements LivroRepository {
     }
 
     @Override
+    public Livro update(String isbn, Livro livroAtualizado) {
+        int index = livros.indexOf(findByIsbn(isbn).orElse(null));
+        livros.set(index, livroAtualizado);
+        return livros.get(index);
+    }
+
+    @Override
     public void remove(Livro livro) {
         livros.remove(livro);
     }

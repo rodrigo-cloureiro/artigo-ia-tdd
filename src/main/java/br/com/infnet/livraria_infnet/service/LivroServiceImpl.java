@@ -32,6 +32,11 @@ public class LivroServiceImpl implements LivroService {
     }
 
     @Override
+    public Livro atualizarLivro(String isbn, Livro livroAtualizado) {
+        return livroRepository.update(isbn, livroAtualizado);
+    }
+
+    @Override
     public void removerLivro(Livro livro) {
         livroRepository.remove(livro);
     }

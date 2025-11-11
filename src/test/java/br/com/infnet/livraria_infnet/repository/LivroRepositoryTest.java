@@ -11,12 +11,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class LivroRepositoryTest {
     private int quantidadeLivros;
+    private Livro livro;
     private LivroRepository livroRepository;
 
     @BeforeEach
     public void setUp() {
         livroRepository = new LivroRepositoryImpl();
         quantidadeLivros = livroRepository.findAll().size();
+        livro = new Livro(
+                "O Programador Pragmático",
+                "Andrew Hunt",
+                "https://m.media-amazon.com/images/I/61hewOW+8zL._SY522_.jpg",
+                "9788577807000",
+                BigDecimal.valueOf(174.30),
+                10,
+                true
+        );
     }
 
     @AfterEach
@@ -28,16 +38,7 @@ public class LivroRepositoryTest {
 
     @Test
     public void deveAdicionarLivro() {
-        Livro novoLivro = new Livro(
-                "O Programador Pragmático",
-                "Andrew Hunt",
-                "https://m.media-amazon.com/images/I/61hewOW+8zL._SY522_.jpg",
-                "9788577807000",
-                BigDecimal.valueOf(174.30),
-                10,
-                true
-        );
-        livroRepository.add(novoLivro);
+        livroRepository.add(livro);
         assertEquals(quantidadeLivros + 1, livroRepository.findAll().size());
     }
 
@@ -52,6 +53,18 @@ public class LivroRepositoryTest {
         Optional<Livro> livroOptional = livroRepository.findByIsbn("9788594318619");
         assertTrue(livroOptional.isPresent());
         assertEquals("Memórias Póstumas de Brás Cubas", livroOptional.get().getTitulo());
+    }
+
+    @Test
+    public void deveAtualizarLivro() {
+        Optional<Livro> antesDeAtualizar = livroRepository.findByIsbn("9788594318619");
+        assertTrue(antesDeAtualizar.isPresent());
+        assertEquals("Memórias Póstumas de Brás Cubas", antesDeAtualizar.get().getTitulo());
+
+        Livro livroAtualizado = livroRepository.update("9788594318619", livro);
+        assertNotNull(livroAtualizado);
+        assertEquals(livroAtualizado, livro);
+        assertEquals("O Programador Pragmático", livroAtualizado.getTitulo());
     }
 
     @Test

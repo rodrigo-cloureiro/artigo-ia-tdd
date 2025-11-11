@@ -70,6 +70,15 @@ public class LivroServiceTest {
     }
 
     @Test
+    public void deveAtualizarLivro() {
+        when(livroRepository.update("9788575227244", livro)).thenReturn(livro);
+        Livro livroAtualizado = livroService.atualizarLivro("9788575227244", livro);
+
+        assertNotNull(livroAtualizado);
+        verify(livroRepository, times(1)).update("9788575227244", livro);
+    }
+
+    @Test
     public void deveRemoverLivro() {
         doNothing().when(livroRepository).remove(livro);
         livroService.removerLivro(livro);
