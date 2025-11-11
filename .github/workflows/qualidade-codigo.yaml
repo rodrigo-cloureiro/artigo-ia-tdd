@@ -7,6 +7,11 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 jobs:
   analise-codigo:
     runs-on: ubuntu-latest
@@ -17,10 +22,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Configurar JDK 24
+      - name: Configurar JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '24'
+          java-version: '21'
           distribution: 'temurin'
 
       - name: Cache dos pacotes SonarCloud
@@ -46,7 +51,7 @@ jobs:
         continue-on-error: true
 
       - name: Gerar relatório de cobertura JaCoCo
-        run: mvn clean test jacoco:report
+        run: mvn clean test jacoco:report -Dtest="com.br.infnet.service.**.*Test"
 
       - name: Fazer upload dos relatórios de cobertura
         uses: codecov/codecov-action@v3

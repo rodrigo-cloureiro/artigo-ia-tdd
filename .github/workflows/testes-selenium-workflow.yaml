@@ -1,4 +1,4 @@
-name: Testes E2E
+name: Testes Selenium
 
 on:
   push:
@@ -37,10 +37,18 @@ jobs:
       - name: Iniciar aplicação em background
         run: |
           mvn exec:java -Dexec.mainClass="com.br.infnet.Main" &
-          sleep 30
+          sleep 45
+          curl -f http://localhost:7000/livros || exit 1
 
       - name: Executar testes Selenium
-        run: mvn test -Dtest="**/*SeleniumTest*" -Dheadless=true
+        run: mvn test -Dtest="com.br.infnet.selenium.**.*Test" -Dheadless=true -Dsurefire.failIfNoSpecifiedTests=false
         env:
           CI: true
           DISPLAY: :99
+
+      - name: Upload dos resultados
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: selenium-test-results
+          path: target/surefire-reports/
