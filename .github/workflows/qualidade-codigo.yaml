@@ -11,6 +11,7 @@ permissions:
   contents: read
   checks: write
   pull-requests: write
+  security-events: write
 
 jobs:
   analise-codigo:
@@ -42,13 +43,27 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Executar análise SpotBugs
-        run: mvn spotbugs:check
-        continue-on-error: true
-
       - name: Executar Checkstyle
         run: mvn checkstyle:check
         continue-on-error: true
+
+      - name: Construir projeto para SpotBugs
+        run: mvn clean package -B -Dmaven.test.skip
+
+      - name: Executar SpotBugs com saída SARIF
+        if: always()
+        uses: jmservera/spotbugs-github-action@v0.2.0-alpha
+        with:
+          packages: com.br.infnet.-
+          target: ./target
+          dependenciesPath: ~/.m2
+          basePath: src/main/java
+
+      - name: Upload dos resultados para GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{github.workspace}}/results.sarif
 
       - name: Gerar relatório de cobertura JaCoCo
         run: mvn clean test jacoco:report -Dtest="com.br.infnet.service.**.*Test"
