@@ -25,6 +25,7 @@ public class LivroServiceTest {
         livro = new Livro(
                 "Refatoração - Aperfeiçoando o Projeto de Código Existente",
                 "Martin Fowler",
+                "https://m.media-amazon.com/images/I/81sTm5M7wjL._SY522_.jpg",
                 "9788575227244",
                 BigDecimal.valueOf(93.10),
                 10,

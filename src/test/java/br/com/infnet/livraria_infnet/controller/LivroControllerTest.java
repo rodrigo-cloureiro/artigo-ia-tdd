@@ -25,6 +25,7 @@ public class LivroControllerTest {
         livro = new Livro(
                 "Código Limpo: Habilidades Práticas do Agile Software",
                 "Robert C. Martin",
+                "https://m.media-amazon.com/images/I/71dH97FwGbL._SY522_.jpg",
                 "9788576082675",
                 BigDecimal.valueOf(125.00),
                 1,
