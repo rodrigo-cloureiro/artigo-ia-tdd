@@ -44,6 +44,15 @@ public class LivroControllerTest {
     }
 
     @Test
+    public void deveAdicionarLivroComSucesso() {
+        when(livroService.adicionar(livro)).thenReturn(livro);
+        Livro adicionado = livroController.adicionar(livro);
+
+        assertNotNull(adicionado);
+        assertEquals(livro, adicionado);
+    }
+
+    @Test
     public void deveRetornarLivrosAtivosComSucesso() {
         when(livroService.listar()).thenReturn(List.of(livro));
         List<Livro> livros = livroController.listar();

@@ -43,6 +43,15 @@ public class LivroServiceTest {
     }
 
     @Test
+    public void deveAdicionarUmLivro() {
+        when(livroRepository.add(livro)).thenReturn(livro);
+        Livro adicionado = livroService.adicionar(livro);
+
+        assertEquals(adicionado, livro);
+        verify(livroRepository, times(1)).add(livro);
+    }
+
+    @Test
     public void deveRetornarListaDeLivrosAtivos() {
         when(livroRepository.findAll()).thenReturn(List.of(livro));
         List<Livro> livros = livroService.listar();

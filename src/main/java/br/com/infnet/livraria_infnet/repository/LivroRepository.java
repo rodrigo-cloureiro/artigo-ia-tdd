@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LivroRepository {
+    Livro add(Livro novoLivro);
+
     List<Livro> findAll();
 
     Optional<Livro> findByIsbn(String isbn);

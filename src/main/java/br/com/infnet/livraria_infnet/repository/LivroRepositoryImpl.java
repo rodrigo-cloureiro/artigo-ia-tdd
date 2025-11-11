@@ -19,6 +19,12 @@ public class LivroRepositoryImpl implements LivroRepository {
     }
 
     @Override
+    public Livro add(Livro novoLivro) {
+        livros.add(novoLivro);
+        return novoLivro;
+    }
+
+    @Override
     public List<Livro> findAll() {
         return Collections.unmodifiableList(livros);
     }

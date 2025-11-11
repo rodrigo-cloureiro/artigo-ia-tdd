@@ -14,6 +14,11 @@ public class LivroServiceImpl implements LivroService {
     private final LivroRepository livroRepository;
 
     @Override
+    public Livro adicionar(Livro novoLivro) {
+        return livroRepository.add(novoLivro);
+    }
+
+    @Override
     public List<Livro> listar() {
         return livroRepository.findAll()
                 .stream()

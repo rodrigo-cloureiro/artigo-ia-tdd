@@ -3,6 +3,7 @@ package br.com.infnet.livraria_infnet.repository;
 import br.com.infnet.livraria_infnet.model.Livro;
 import org.junit.jupiter.api.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,22 @@ public class LivroRepositoryTest {
         if (livroRepository != null) {
             livroRepository = null;
         }
+    }
+
+    @Test
+    public void deveAdicionarLivro() {
+        int quantidadeLivros = livroRepository.findAll().size();
+        Livro novoLivro = new Livro(
+                "O Programador Pragmático",
+                "Andrew Hunt",
+                "https://m.media-amazon.com/images/I/61hewOW+8zL._SY522_.jpg",
+                "9788577807000",
+                BigDecimal.valueOf(174.30),
+                10,
+                true
+        );
+        livroRepository.add(novoLivro);
+        assertEquals(quantidadeLivros + 1, livroRepository.findAll().size());
     }
 
     @Test
