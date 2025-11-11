@@ -36,6 +36,16 @@ public class LivroRepositoryImpl implements LivroRepository {
                 .findFirst();
     }
 
+    @Override
+    public void remove(Livro livro) {
+        livros.remove(livro);
+    }
+
+    @Override
+    public void removeByIsbn(String isbn) {
+        livros.remove(findByIsbn(isbn).orElse(null));
+    }
+
     private List<Livro> initLivros() {
         List<Livro> temp = Collections.emptyList();
         ObjectMapper mapper = new ObjectMapper();

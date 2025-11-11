@@ -11,4 +11,8 @@ public interface LivroService {
     List<Livro> listar();
 
     Optional<Livro> buscarPorIsbn(String isbn);
+
+    void removerLivro(Livro livro);
+
+    void removerLivroPorIsbn(String isbn);
 }

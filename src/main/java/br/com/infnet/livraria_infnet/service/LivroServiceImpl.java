@@ -31,6 +31,16 @@ public class LivroServiceImpl implements LivroService {
         return livroRepository.findByIsbn(cleanup(isbn));
     }
 
+    @Override
+    public void removerLivro(Livro livro) {
+        livroRepository.remove(livro);
+    }
+
+    @Override
+    public void removerLivroPorIsbn(String isbn) {
+        livroRepository.removeByIsbn(cleanup(isbn));
+    }
+
     private String cleanup(String isbn) {
         return isbn.replaceAll("[^0-9]", "");
     }

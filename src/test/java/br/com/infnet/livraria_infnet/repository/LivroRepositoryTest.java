@@ -10,11 +10,13 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LivroRepositoryTest {
+    private int quantidadeLivros;
     private LivroRepository livroRepository;
 
     @BeforeEach
     public void setUp() {
         livroRepository = new LivroRepositoryImpl();
+        quantidadeLivros = livroRepository.findAll().size();
     }
 
     @AfterEach
@@ -26,7 +28,6 @@ public class LivroRepositoryTest {
 
     @Test
     public void deveAdicionarLivro() {
-        int quantidadeLivros = livroRepository.findAll().size();
         Livro novoLivro = new Livro(
                 "O Programador Pragmático",
                 "Andrew Hunt",
@@ -51,5 +52,18 @@ public class LivroRepositoryTest {
         Optional<Livro> livroOptional = livroRepository.findByIsbn("9788594318619");
         assertTrue(livroOptional.isPresent());
         assertEquals("Memórias Póstumas de Brás Cubas", livroOptional.get().getTitulo());
+    }
+
+    @Test
+    public void deveRemoverLivro() {
+        Livro livro = livroRepository.findAll().getFirst();
+        livroRepository.remove(livro);
+        assertEquals(quantidadeLivros - 1, livroRepository.findAll().size());
+    }
+
+    @Test
+    public void deveRemoverLivroPorIsbn() {
+        livroRepository.removeByIsbn("9788594318619");
+        assertEquals(quantidadeLivros - 1, livroRepository.findAll().size());
     }
 }

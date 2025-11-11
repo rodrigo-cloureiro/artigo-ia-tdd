@@ -68,4 +68,20 @@ public class LivroServiceTest {
         assertTrue(livroOpional.isPresent());
         assertEquals("Martin Fowler", livroOpional.get().getAutor());
     }
+
+    @Test
+    public void deveRemoverLivro() {
+        doNothing().when(livroRepository).remove(livro);
+        livroService.removerLivro(livro);
+
+        verify(livroRepository, times(1)).remove(livro);
+    }
+
+    @Test
+    public void deveRemoverLivroPorIsbn() {
+        doNothing().when(livroRepository).removeByIsbn(livro.getIsbn());
+        livroService.removerLivroPorIsbn(livro.getIsbn());
+
+        verify(livroRepository, times(1)).removeByIsbn(livro.getIsbn());
+    }
 }

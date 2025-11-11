@@ -11,4 +11,8 @@ public interface LivroRepository {
     List<Livro> findAll();
 
     Optional<Livro> findByIsbn(String isbn);
+
+    void remove(Livro livro);
+
+    void removeByIsbn(String isbn);
 }
