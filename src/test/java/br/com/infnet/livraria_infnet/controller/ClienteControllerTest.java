@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -60,5 +61,13 @@ public class ClienteControllerTest {
         when(clienteService.listar()).thenReturn(List.of(cliente));
         List<Cliente> clientes = clienteController.listar();
         assertEquals(1, clientes.size());
+    }
+
+    @Test
+    public void deveRetornarClientePorCpf() {
+        when(clienteService.buscarPorCpf("42084537703")).thenReturn(Optional.ofNullable(cliente));
+        Optional<Cliente> clienteOptional = clienteController.buscarPorCpf("42084537703");
+        assertTrue(clienteOptional.isPresent());
+        assertEquals("livia.pires@al.infnet.edu.br", clienteOptional.get().getEmail());
     }
 }
