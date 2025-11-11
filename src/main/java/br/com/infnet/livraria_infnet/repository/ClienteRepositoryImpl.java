@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ClienteRepositoryImpl implements ClienteRepository {
@@ -21,6 +22,13 @@ public class ClienteRepositoryImpl implements ClienteRepository {
     @Override
     public List<Cliente> findAll() {
         return Collections.unmodifiableList(clientes);
+    }
+
+    @Override
+    public Optional<Cliente> findByCpf(String cpf) {
+        return clientes.stream()
+                .filter(c -> c.getCpf().equals(cpf))
+                .findFirst();
     }
 
     private List<Cliente> initClientes() {
