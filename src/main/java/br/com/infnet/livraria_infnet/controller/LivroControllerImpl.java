@@ -31,4 +31,22 @@ public class LivroControllerImpl implements LivroController {
     public Optional<Livro> buscarPorIsbn(@PathVariable String isbn) {
         return livroService.buscarPorIsbn(isbn);
     }
+
+    @Override
+    @PutMapping("/{isbn}")
+    public Livro atualizarLivro(@PathVariable String isbn, @RequestBody Livro livro) {
+        return livroService.atualizarLivro(isbn, livro);
+    }
+
+    @Override
+    @DeleteMapping("")
+    public void removerLivro(@RequestBody Livro livro) {
+        livroService.removerLivro(livro);
+    }
+
+    @Override
+    @DeleteMapping("/{isbn}")
+    public void removerLivroPorIsbn(@PathVariable String isbn) {
+        livroService.removerLivroPorIsbn(isbn);
+    }
 }

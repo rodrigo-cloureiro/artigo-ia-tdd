@@ -50,6 +50,7 @@ public class LivroControllerTest {
 
         assertNotNull(adicionado);
         assertEquals(livro, adicionado);
+        verify(livroService, times(1)).adicionar(livro);
     }
 
     @Test
@@ -58,6 +59,7 @@ public class LivroControllerTest {
         List<Livro> livros = livroController.listar();
 
         assertEquals(1, livros.size());
+        verify(livroService, times(1)).listar();
     }
 
     @Test
@@ -67,5 +69,32 @@ public class LivroControllerTest {
 
         assertTrue(livroOptional.isPresent());
         assertTrue(livroOptional.get().getTitulo().contains("Código Limpo"));
+        verify(livroService, times(1)).buscarPorIsbn("9788576082675");
+    }
+
+    @Test
+    public void deveAtualizarLivroComSucesso() {
+        when(livroService.atualizarLivro("9788576082675", livro)).thenReturn(livro);
+        Livro livroAtualizado = livroController.atualizarLivro("9788576082675", livro);
+
+        assertNotNull(livroAtualizado);
+        assertEquals(livro, livroAtualizado);
+        verify(livroService, times(1)).atualizarLivro("9788576082675", livro);
+    }
+
+    @Test
+    public void deveRemoverLivroComSucesso() {
+        doNothing().when(livroService).removerLivro(livro);
+        livroController.removerLivro(livro);
+
+        verify(livroService, times(1)).removerLivro(livro);
+    }
+
+    @Test
+    public void deveRemoverLivroPorIsbnComSucesso() {
+        doNothing().when(livroService).removerLivroPorIsbn("9788576082675");
+        livroController.removerLivroPorIsbn("9788576082675");
+
+        verify(livroService, times(1)).removerLivroPorIsbn("9788576082675");
     }
 }
