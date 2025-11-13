@@ -6,7 +6,7 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import io.javalin.rendering.template.JavalinThymeleaf;
 
 public class ThymeleafConfig {
-    public static void configure() {
+    public static JavalinThymeleaf configure() {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setPrefix("/templates/");
@@ -15,7 +15,6 @@ public class ThymeleafConfig {
 
         TemplateEngine templateEngine = new TemplateEngine();
         templateEngine.setTemplateResolver(templateResolver);
-
-        JavalinThymeleaf.init(templateEngine);
+        return new JavalinThymeleaf(templateEngine);
     }
 }

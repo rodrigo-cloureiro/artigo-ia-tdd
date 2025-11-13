@@ -112,6 +112,6 @@ public class LivroService {
     }
 
     public Optional<Object> buscarEmprestimoAtivo(Livro livro) {
-        return emprestimoService.buscarEmprestimoAtivoPorLivro(livro);
+        return Optional.ofNullable(emprestimoService.buscarEmprestimoAtivoPorLivro(livro));
     }
 }

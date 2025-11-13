@@ -9,7 +9,7 @@ import com.biblioteca.repository.LivroRepository;
 import com.biblioteca.service.EmprestimoService;
 import com.biblioteca.service.LivroService;
 import io.javalin.Javalin;
-import io.javalin.http.staticfiles.Location;
+import io.javalin.rendering.template.JavalinThymeleaf;
 
 public class BibliotecaApp {
     public static void main(String[] args) {
@@ -27,16 +27,11 @@ public class BibliotecaApp {
         EmprestimoController emprestimoController = new EmprestimoController(emprestimoService, livroService);
 
         // Configurar Thymeleaf
-        ThymeleafConfig.configure();
+        JavalinThymeleaf thymeleafRenderer = ThymeleafConfig.configure();
 
         // Criar aplicação Javalin com configurações de segurança
         Javalin app = Javalin.create(config -> {
-            config.staticFiles.add(staticFiles -> {
-                staticFiles.hostedPath = "/";
-                staticFiles.directory = "/public";
-                staticFiles.location = Location.CLASSPATH;
-            });
-
+            config.fileRenderer(thymeleafRenderer);
             config.bundledPlugins.enableDevLogging();
         });
 

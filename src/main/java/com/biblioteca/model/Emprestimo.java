@@ -156,4 +156,8 @@ public class Emprestimo {
         return String.format("Emprestimo{id=%d, livro=%s, usuario='%s', dataEmprestimo=%s, dataDevolucaoPrevista=%s, devolvido=%s}",
                 id, livro.getTitulo(), usuario, dataEmprestimo, dataDevolucaoPrevista, devolvido);
     }
+
+    public void setDataDevolucaoPrevista(LocalDate localDate) {
+
+    }
 }

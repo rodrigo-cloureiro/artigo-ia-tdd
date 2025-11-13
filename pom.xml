@@ -14,14 +14,15 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javalin.version>6.1.4</javalin.version>
+        <javalin.version>6.7.0</javalin.version>
         <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
         <junit.version>5.10.2</junit.version>
         <mockito.version>5.8.0</mockito.version>
         <jqwik.version>1.8.4</jqwik.version>
         <selenium.version>4.34.0</selenium.version>
         <jackson.version>2.17.1</jackson.version>
-        <owasp.version>1.8.0</owasp.version>
+        <owasp.version>1.2.3</owasp.version>
+        <assertj.version>3.27.3</assertj.version>
     </properties>
 
     <dependencies>
@@ -37,6 +38,19 @@
             <groupId>org.thymeleaf</groupId>
             <artifactId>thymeleaf</artifactId>
             <version>${thymeleaf.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.javalin</groupId>
+            <artifactId>javalin-rendering</artifactId>
+            <version>6.7.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.javalin/javalin-rendering-thymeleaf -->
+        <dependency>
+            <groupId>io.javalin</groupId>
+            <artifactId>javalin-rendering-thymeleaf</artifactId>
+            <version>7.0.0-alpha.1</version>
         </dependency>
 
         <!-- JSON Processing -->
@@ -100,6 +114,13 @@
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-chrome-driver</artifactId>
             <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
             <scope>test</scope>
         </dependency>
 

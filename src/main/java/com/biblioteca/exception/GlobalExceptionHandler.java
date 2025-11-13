@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
         model.put("message", "Tente novamente mais tarde");
 
         ctx.status(500);
-        ctx.render("templates/error/error.html", model);
+        ctx.render("error/error", model);
     };
 
     public static final ExceptionHandler<IllegalArgumentException> VALIDATION_EXCEPTION_HANDLER = (e, ctx) -> {
@@ -35,11 +35,11 @@ public class GlobalExceptionHandler {
 
         String path = ctx.path();
         if (path.contains("/livros")) {
-            ctx.render("templates/livros/form.html", model);
+            ctx.render("livros/form", model);
         } else if (path.contains("/emprestimos")) {
-            ctx.render("templates/emprestimos/form-emprestimo.html", model);
+            ctx.render("emprestimos/form-emprestimo", model);
         } else {
-            ctx.render("templates/error/error.html", model);
+            ctx.render("error/error", model);
         }
     };
 
@@ -51,7 +51,7 @@ public class GlobalExceptionHandler {
         model.put("message", "A entrada contém padrões suspeitos");
 
         ctx.status(400);
-        ctx.render("templates/error/security-error.html", model);
+        ctx.render("error/security-error", model);
     };
 
     public static final ExceptionHandler<HttpResponseException> HTTP_RESPONSE_EXCEPTION_HANDLER = (e, ctx) -> {
@@ -62,6 +62,6 @@ public class GlobalExceptionHandler {
         model.put("message", e.getMessage());
 
         ctx.status(e.getStatus());
-        ctx.render("templates/error/error.html", model);
+        ctx.render("error/error", model);
     };
 }

@@ -16,7 +16,8 @@ class LivroServiceTest {
     @BeforeEach
     void setUp() {
         repository = mock(LivroRepository.class);
-        service = new LivroService(repository);
+        EmprestimoService emprestimoService = mock(EmprestimoService.class);
+        service = new LivroService(repository, emprestimoService);
     }
 
     @Test

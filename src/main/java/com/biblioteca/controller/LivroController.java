@@ -21,14 +21,14 @@ public class LivroController {
         Map<String, Object> model = new HashMap<>();
         model.put("livros", livroService.listarTodos());
         model.put("tituloPagina", "Todos os Livros");
-        ctx.render("templates/livros/listar.html", model);
+        ctx.render("livros/listar", model);
     }
 
     public void mostrarFormularioCadastro(Context ctx) {
         Map<String, Object> model = new HashMap<>();
         model.put("livro", new Livro());
         model.put("tituloPagina", "Cadastrar Novo Livro");
-        ctx.render("templates/livros/form.html", model);
+        ctx.render("livros/form", model);
     }
 
     public void cadastrarLivro(Context ctx) {
@@ -45,22 +45,46 @@ public class LivroController {
 
         } catch (IllegalArgumentException e) {
             Map<String, Object> model = new HashMap<>();
-            model.put("livro", new Livro(
-                    ctx.formParam("titulo"),
-                    ctx.formParam("autor"),
-                    ctx.formParam("isbn")
-            ));
+
+            // Criar um livro vazio para evitar null
+            Livro livroComErro = new Livro();
+
+            // Setar apenas os valores válidos para exibir no formulário
+            try {
+                String titulo = ctx.formParam("titulo");
+                if (titulo != null && !titulo.trim().isEmpty()) {
+                    livroComErro.setTitulo(titulo);
+                }
+            } catch (Exception ignored) {}
+
+            try {
+                String autor = ctx.formParam("autor");
+                if (autor != null && !autor.trim().isEmpty()) {
+                    livroComErro.setAutor(autor);
+                }
+            } catch (Exception ignored) {}
+
+            try {
+                String isbn = ctx.formParam("isbn");
+                if (isbn != null && !isbn.trim().isEmpty()) {
+                    livroComErro.setIsbn(isbn);
+                }
+            } catch (Exception ignored) {}
+
+            model.put("livro", livroComErro);
             model.put("erro", SecurityUtils.escapeHtml(e.getMessage()));
             model.put("tituloPagina", "Cadastrar Novo Livro");
-            ctx.render("templates/livros/form.html", model);
+            ctx.render("livros/form", model);
+
         } catch (SecurityException e) {
             Map<String, Object> model = new HashMap<>();
             model.put("livro", new Livro());
             model.put("erro", "Entrada contém caracteres maliciosos. Por favor, use apenas texto simples.");
             model.put("tituloPagina", "Cadastrar Novo Livro");
-            ctx.render("templates/livros/form.html", model);
+            ctx.render("livros/form", model);
         }
     }
+
 
     public void mostrarFormularioEdicao(Context ctx) {
         try {
@@ -71,7 +95,7 @@ public class LivroController {
                 Map<String, Object> model = new HashMap<>();
                 model.put("livro", livro.get());
                 model.put("tituloPagina", "Editar Livro");
-                ctx.render("templates/livros/form.html", model);
+                ctx.render("livros/form", model);
             } else {
                 throw new NotFoundResponse("Livro não encontrado");
             }
@@ -101,26 +125,52 @@ public class LivroController {
 
         } catch (IllegalArgumentException e) {
             Map<String, Object> model = new HashMap<>();
-            model.put("livro", new Livro(
-                    ctx.formParam("titulo"),
-                    ctx.formParam("autor"),
-                    ctx.formParam("isbn")
-            ));
+
+            // Buscar o livro original para manter o ID
+            Long id = Long.parseLong(ctx.pathParam("id"));
+            Optional<Livro> livroOriginal = livroService.buscarPorId(id);
+
+            Livro livroComErro = livroOriginal.orElse(new Livro());
+
+            // Tentar setar os novos valores
+            try {
+                String titulo = ctx.formParam("titulo");
+                if (titulo != null && !titulo.trim().isEmpty()) {
+                    livroComErro.setTitulo(titulo);
+                }
+            } catch (Exception ignored) {}
+
+            try {
+                String autor = ctx.formParam("autor");
+                if (autor != null && !autor.trim().isEmpty()) {
+                    livroComErro.setAutor(autor);
+                }
+            } catch (Exception ignored) {}
+
+            try {
+                String isbn = ctx.formParam("isbn");
+                if (isbn != null && !isbn.trim().isEmpty()) {
+                    livroComErro.setIsbn(isbn);
+                }
+            } catch (Exception ignored) {}
+
+            model.put("livro", livroComErro);
             model.put("erro", SecurityUtils.escapeHtml(e.getMessage()));
             model.put("tituloPagina", "Editar Livro");
-            ctx.render("templates/livros/form.html", model);
+            ctx.render("livros/form", model);
+
         } catch (SecurityException e) {
+            Long id = Long.parseLong(ctx.pathParam("id"));
+            Optional<Livro> livroOriginal = livroService.buscarPorId(id);
+
             Map<String, Object> model = new HashMap<>();
-            model.put("livro", new Livro(
-                    ctx.formParam("titulo"),
-                    ctx.formParam("autor"),
-                    ctx.formParam("isbn")
-            ));
+            model.put("livro", livroOriginal.orElse(new Livro()));
             model.put("erro", "Entrada contém caracteres maliciosos. Por favor, use apenas texto simples.");
             model.put("tituloPagina", "Editar Livro");
-            ctx.render("templates/livros/form.html", model);
+            ctx.render("livros/form", model);
         }
     }
+
 
     public void deletarLivro(Context ctx) {
         try {
@@ -176,6 +226,6 @@ public class LivroController {
             model.put("erroBusca", "Termo de busca contém caracteres maliciosos");
         }
 
-        ctx.render("templates/livros/listar.html", model);
+        ctx.render("livros/listar", model);
     }
 }

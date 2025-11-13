@@ -19,30 +19,30 @@ public class EmprestimoController {
 
     public void listarEmprestimos(Context ctx) {
         Map<String, Object> model = new HashMap<>();
-        model.put("templates/emprestimos", emprestimoService.listarTodos());
+        model.put("emprestimos", emprestimoService.listarTodos());
         model.put("tituloPagina", "Todos os Empréstimos");
-        ctx.render("templates/emprestimos/listar.html", model);
+        ctx.render("emprestimos/listar", model);
     }
 
     public void listarEmprestimosAtivos(Context ctx) {
         Map<String, Object> model = new HashMap<>();
-        model.put("templates/emprestimos", emprestimoService.listarAtivos());
+        model.put("emprestimos", emprestimoService.listarAtivos());
         model.put("tituloPagina", "Empréstimos Ativos");
-        ctx.render("templates/emprestimos/listar.html", model);
+        ctx.render("emprestimos/listar", model);
     }
 
     public void listarEmprestimosAtrasados(Context ctx) {
         Map<String, Object> model = new HashMap<>();
-        model.put("templates/emprestimos", emprestimoService.listarAtrasados());
+        model.put("emprestimos", emprestimoService.listarAtrasados());
         model.put("tituloPagina", "Empréstimos Atrasados");
-        ctx.render("templates/emprestimos/listar.html", model);
+        ctx.render("emprestimos/listar", model);
     }
 
     public void mostrarFormularioEmprestimo(Context ctx) {
         Map<String, Object> model = new HashMap<>();
         model.put("livros", livroService.listarTodos());
         model.put("tituloPagina", "Realizar Empréstimo");
-        ctx.render("templates/emprestimos/form-emprestimo.html.html", model);
+        ctx.render("emprestimos/form-emprestimo", model);
     }
 
     public void realizarEmprestimo(Context ctx) {
@@ -53,14 +53,14 @@ public class EmprestimoController {
 
             Emprestimo emprestimo = emprestimoService.realizarEmprestimo(livroId, usuario, prazoDias);
 
-            ctx.redirect("/templates/emprestimos/ativos?sucesso=Empréstimo+realizado+com+sucesso");
+            ctx.redirect("emprestimos/ativos?sucesso=Empréstimo+realizado+com+sucesso");
 
         } catch (IllegalArgumentException e) {
             Map<String, Object> model = new HashMap<>();
             model.put("livros", livroService.listarTodos());
             model.put("erro", e.getMessage());
             model.put("tituloPagina", "Realizar Empréstimo");
-            ctx.render("templates/emprestimos/form-emprestimo.html.html", model);
+            ctx.render("emprestimos/form-emprestimo", model);
         }
     }
 
@@ -72,7 +72,7 @@ public class EmprestimoController {
             Map<String, Object> model = new HashMap<>();
             model.put("emprestimo", emprestimo.get());
             model.put("tituloPagina", "Detalhes do Empréstimo");
-            ctx.render("templates/emprestimos/detalhes.html", model);
+            ctx.render("emprestimos/detalhes", model);
         } else {
             throw new NotFoundResponse("Empréstimo não encontrado");
         }
@@ -83,10 +83,10 @@ public class EmprestimoController {
 
         try {
             emprestimoService.registrarDevolucao(id);
-            ctx.redirect("/templates/emprestimos");
+            ctx.redirect("/emprestimos");
 
         } catch (IllegalArgumentException | IllegalStateException e) {
-            ctx.redirect("/templates/emprestimos/" + id + "?erro=" + e.getMessage().replace(" ", "+"));
+            ctx.redirect("emprestimos/" + id + "?erro=" + e.getMessage().replace(" ", "+"));
         }
     }
 
@@ -95,10 +95,10 @@ public class EmprestimoController {
 
         try {
             emprestimoService.pagarMulta(id);
-            ctx.redirect("/templates/emprestimos/" + id + "?sucesso=Multa+paga+com+sucesso");
+            ctx.redirect("/emprestimos/" + id + "?sucesso=Multa+paga+com+sucesso");
 
         } catch (IllegalArgumentException e) {
-            ctx.redirect("/templates/emprestimos/" + id + "?erro=" + e.getMessage().replace(" ", "+"));
+            ctx.redirect("/emprestimos/" + id + "?erro=" + e.getMessage().replace(" ", "+"));
         }
     }
 
@@ -108,13 +108,13 @@ public class EmprestimoController {
         Map<String, Object> model = new HashMap<>();
 
         if (usuario != null && !usuario.trim().isEmpty()) {
-            model.put("templates/emprestimos", emprestimoService.buscarPorUsuario(usuario));
+            model.put("emprestimos", emprestimoService.buscarPorUsuario(usuario));
             model.put("tituloPagina", "Empréstimos do Usuário: " + usuario);
         } else {
-            model.put("templates/emprestimos", emprestimoService.listarTodos());
+            model.put("emprestimos", emprestimoService.listarTodos());
             model.put("tituloPagina", "Todos os Empréstimos");
         }
 
-        ctx.render("templates/emprestimos/listar.html", model);
+        ctx.render("emprestimos/listar.html", model);
     }
 }
