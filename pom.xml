@@ -19,7 +19,7 @@
         <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
         <javalin-thymeleaf.version>6.1.0</javalin-thymeleaf.version> <!-- Plugin de integração -->
         <slf4j.version>2.0.13</slf4j.version>
-        <logback.version>1.5.6</logback.version>
+        <logback.version>1.5.13</logback.version>
         <junit.version>5.10.3</junit.version>
         <jqwik.version>1.9.2</jqwik.version>
         <mockito.version>5.12.0</mockito.version>
@@ -47,11 +47,19 @@
             <version>${thymeleaf.version}</version>
         </dependency>
 
-        <!-- Integração Javalin + Thymeleaf -->
+        <!-- https://mvnrepository.com/artifact/io.javalin/javalin-rendering -->
         <dependency>
-            <groupId>io.javalin.community</groupId>
-            <artifactId>javalin-thymeleaf-plugin</artifactId>
-            <version>${javalin-thymeleaf.version}</version>
+            <groupId>io.javalin</groupId>
+            <artifactId>javalin-rendering</artifactId>
+            <version>6.3.0</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.javalin/javalin-rendering-thymeleaf -->
+        <dependency>
+            <groupId>io.javalin</groupId>
+            <artifactId>javalin-rendering-thymeleaf</artifactId>
+            <version>7.0.0-alpha.1</version>
         </dependency>
 
         <!-- Logging (SLF4J + Logback) -->

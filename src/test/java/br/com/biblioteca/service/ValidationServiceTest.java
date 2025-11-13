@@ -2,7 +2,7 @@ package br.com.biblioteca.service;
 
 import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;
-import net.jqwik.api.domains.Chars;
+import net.jqwik.api.constraints.Chars;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,10 +50,10 @@ public class ValidationServiceTest {
     // --- Testes de Injeção/XSS (Propriedade) ---
 
     @Property(tries = 100)
-    @DisplayName("Deve detectar caracteres maliciosos em Título (Testes de Propriedade - Jqwik)")
-    void shouldDetectDangerousCharactersInTitle(@ForAll @Chars(blacklist = {
+    void shouldDetectDangerousCharactersInTitle(@ForAll @Chars(value = {
             'a', 'b', 'c' // Ignora caracteres comuns para focar em símbolos perigosos
     }) String randomInput) {
+        validationService = new ValidationService();
 
         // Foca em strings que contenham explicitamente símbolos de injeção/XSS
         if (randomInput.contains("<") || randomInput.contains("'") || randomInput.contains(";")) {

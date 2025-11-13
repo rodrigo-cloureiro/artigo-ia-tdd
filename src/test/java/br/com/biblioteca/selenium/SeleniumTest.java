@@ -39,7 +39,7 @@ public class SeleniumTest {
         // Inicia a aplicação Javalin (assumindo que Application.main a inicia)
         // Nota: Em um ambiente real, você inicializaria o Javalin diretamente aqui
         // Para simplificar, assumimos que o main() inicia a app
-        app = Javalin.start(7070);
+        app = Javalin.create().start(7070);
         // Você precisaria de um Javalin start/stop controlado para testes.
         // Para este exemplo, faremos um start/stop simplificado.
         try {

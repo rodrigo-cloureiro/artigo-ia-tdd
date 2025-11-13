@@ -57,7 +57,7 @@ public class LoanController {
         model.put("loans", activeLoans);
         model.put("books", bookDetails);
         model.put("pageTitle", "Empréstimos Ativos");
-        ctx.render("loans-list.html.html", model);
+        ctx.render("loans-list.html", model);
     }
 
     /**
