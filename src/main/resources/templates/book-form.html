@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Define o título da página dinamicamente -->
+    <title th:text="${isNew} ? 'Adicionar Novo Livro' : 'Editar Livro'">Formulário de Livro</title>
+</head>
+<body>
+
+<div th:replace="~{layout :: content}">
+
+    <div th:fragment="content">
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <!-- Título Dinâmico -->
+                        <h2 class="h4 mb-4" th:text="${isNew} ? 'Adicionar Novo Livro' : 'Editar Livro'">
+                            Formulário de Livro
+                        </h2>
+
+                        Formulário de Livro
+                        </h1>
+
+                        <!-- Alerta de Erro -->
+                        <div th:if="${error}" class="alert alert-danger" role="alert">
+                            <strong>Erro:</strong> <span th:text="${error}">Mensagem de erro aqui.</span>
+                        </div>
+
+                        <!--
+                            Formulário
+                            - th:action dinâmico (criação ou atualização)
+                            - th:object para binding dos dados
+                        -->
+                        <form method="POST"
+                              th:action="${isNew} ? @{/books} : @{/update/{id}(id=${book.id})}"
+                              th:object="${book}">
+
+                            <!-- Campo Título -->
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Título</label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="title"
+                                       th:field="*{title}"
+                                       required>
+                            </div>
+
+                            <!-- Campo Autor -->
+                            <div class="mb-3">
+                                <label for="author" class="form-label">Autor</label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="author"
+                                       th:field="*{author}"
+                                       required>
+                            </div>
+
+                            <!-- Campo ISBN -->
+                            <div class="mb-3">
+                                <label for="isbn" class="form-label">ISBN (13 dígitos)</label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="isbn"
+                                       th:field="*{isbn}"
+                                       required
+                                       maxlength="13"
+                                       pattern="\d{13}"
+                                       title="O ISBN deve conter exatamente 13 números.">
+                                <div class="form-text">
+                                    Deve conter exatamente 13 dígitos numéricos.
+                                </div>
+                            </div>
+
+                            <!-- Botões de Ação -->
+                            <div class="d-flex justify-content-end">
+                                <a th:href="@{/}" class="btn btn-outline-secondary me-2">
+                                    Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-primary" th:text="${isNew} ? 'Salvar' : 'Atualizar'">
+                                    Salvar
+                                </button>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div> <!-- Fim do th:replace -->
+
+</body>
+</html>

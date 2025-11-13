@@ -1,0 +1,19 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <!-- Reduz o "barulho" do Javalin e do Thymeleaf -->
+    <logger name="io.javalin" level="INFO"/>
+    <logger name="org.thymeleaf" level="ERROR"/>
+    <logger name="org.eclipse.jetty" level="INFO"/>
+
+    <!-- Nível de log da nossa aplicação -->
+    <logger name="br.com.biblioteca" level="DEBUG"/>
+</configuration>

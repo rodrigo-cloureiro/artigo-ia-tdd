@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- O layout.html cuida do <head>, então só precisamos do título -->
+    <title>Acervo da Biblioteca</title>
+</head>
+<body>
+
+<!-- Substitui o fragmento "content" no layout.html -->
+<div th:replace="~{layout :: content}">
+
+    <div th:fragment="content">
+        <div class="card">
+            <div class="card-body">
+
+                <!-- Cabeçalho e Busca -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h4 mb-0">Acervo de Livros</h2>
+                    <a th:href="@{/new}" class="btn btn-primary">
+                        <i class="bi bi-plus-lg"></i> Novo Livro
+                    </a>
+                </div>
+
+                <!-- Formulário de Busca -->
+                <form th:action="@{/search}" method="GET" class="mb-4">
+                    <div class="input-group">
+                        <input type="text"
+                               name="query"
+                               class="form-control"
+                               placeholder="Buscar por Título, Autor ou ISBN..."
+                               th:value="${query}">
+                        <button class="btn btn-outline-secondary" type="submit">
+                            <i class="bi bi-search"></i> Buscar
+                        </button>
+                        <a th:href="@{/}" class="btn btn-outline-secondary" th:if="${query}">
+                            <i class="bi bi-x-lg"></i> Limpar
+                        </a>
+                    </div>
+                </form>
+
+                <!-- Tabela de Livros -->
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle">
+                        <thead class="table-light">
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Título</th>
+                            <th scope="col">Autor</th>
+                            <th scope="col">ISBN</th>
+                            <th scope="col" class="text-end">Ações</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- Loop nos livros -->
+                        <tr th:each="book : ${books}">
+                            <th scope="row" th:text="${book.id}">1</th>
+                            <td th:text="${book.title}">O Senhor dos Anéis</td>
+                            <td th:text="${book.author}">J.R.R. Tolkien</td>
+                            <td th:text="${book.isbn}">9788535902796</td>
+                            <td class="text-end">
+                                <!-- Botão de Editar -->
+                                <a th:href="@{/edit/{id}(id=${book.id})}" class="btn btn-sm btn-outline-primary me-1">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+
+                                <!-- Formulário de Exclusão (para usar POST) -->
+                                <form th:action="@{/delete/{id}(id=${book.id})}" method="POST" class="d-inline"
+                                      onsubmit="return confirm('Tem certeza que deseja excluir este livro?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i> Excluir
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+
+                        <!-- Caso a lista esteja vazia -->
+                        <tr th:if="${#lists.isEmpty(books)}">
+                            <td colspan="5" class="text-center text-muted fst-italic py-3">
+                                Nenhum livro encontrado.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div> <!-- Fim do th:replace -->
+
+</body>
+</html>
