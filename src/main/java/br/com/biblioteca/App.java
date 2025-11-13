@@ -2,40 +2,50 @@ package br.com.biblioteca;
 
 import br.com.biblioteca.controller.BookController;
 import br.com.biblioteca.controller.LoanController;
-import br.com.biblioteca.model.Book;
-import br.com.biblioteca.repository.InMemoryBookRepository;
-import br.com.biblioteca.repository.InMemoryLoanRepository;
+import br.com.biblioteca.db.Database;
+import br.com.biblioteca.repository.JdbcBookRepository;
+import br.com.biblioteca.repository.JdbcLoanRepository;
 import br.com.biblioteca.service.BookService;
 import br.com.biblioteca.service.LoanService;
 import io.javalin.Javalin;
+import io.javalin.http.HttpCode;
 import io.javalin.http.staticfiles.Location;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class App {
+
+    private static final Logger log = LoggerFactory.getLogger(App.class);
+
     public static void main(String[] args) {
-        InMemoryBookRepository repo = new InMemoryBookRepository();
-        BookService bookService = new BookService(repo);
+        // init DB and fixtures
+        Database db = Database.getInstance();
+        db.loadFixturesIfPresent();
 
-        InMemoryLoanRepository loanRepo = new InMemoryLoanRepository();
-        LoanService loanService = new LoanService(loanRepo, bookService);
+        var bookRepo = new JdbcBookRepository();
+        var loanRepo = new JdbcLoanRepository();
+        var bookService = new BookService(bookRepo);
+        var loanService = new LoanService(loanRepo, bookService);
 
-        // controllers
-        BookController bookController = new BookController(bookService, loanService);
-        LoanController loanController = new LoanController(loanService, bookService);
-
-        // Seed sample data
-        try {
-            repo.save(new Book(null, "Clean Code", "Robert C. Martin", "9780132350884"));
-            repo.save(new Book(null, "Effective Java", "Joshua Bloch", "9780134685991"));
-        } catch (Exception e) {
-            // ignore if seeded incorrectly
-        }
+        var bookController = new BookController(bookService, loanService);
+        var loanController = new LoanController(loanService, bookService);
 
         Javalin app = Javalin.create(cfg -> {
             cfg.staticFiles.add("/static", Location.CLASSPATH);
             cfg.contextPath = "/";
         }).start(7000);
 
-        // Book routes
+        // global exception mapping
+        app.exception(Exception.class, (e, ctx) -> {
+            log.error("Erro não tratado", e);
+            if (ctx.header("Accept") != null && ctx.header("Accept").contains("application/json")) {
+                ctx.status(HttpCode.INTERNAL_SERVER_ERROR).json(new ErrorResponse("Erro interno"));
+            } else {
+                ctx.status(HttpCode.INTERNAL_SERVER_ERROR).result("Erro interno: " + e.getMessage());
+            }
+        });
+
+        // routes
         app.get("/", bookController.listView);
         app.get("/books/new", bookController.showCreateForm);
         app.post("/books", bookController.create);
@@ -44,7 +54,6 @@ public class App {
         app.post("/books/:id", bookController.update);
         app.post("/books/:id/delete", bookController.delete);
 
-        // Loan routes
         app.get("/loans", loanController.listView);
         app.get("/loans/new", loanController.showCreateForm);
         app.post("/loans", loanController.create);
@@ -53,5 +62,10 @@ public class App {
         app.post("/loans/:id/pay", loanController.payFine);
 
         System.out.println("Aplicação iniciada em http://localhost:7000");
+    }
+
+    static class ErrorResponse {
+        public final String message;
+        public ErrorResponse(String message) { this.message = message; }
     }
 }

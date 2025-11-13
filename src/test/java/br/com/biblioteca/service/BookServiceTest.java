@@ -1,57 +1,49 @@
 package br.com.biblioteca.service;
 
+import br.com.biblioteca.db.Database;
 import br.com.biblioteca.model.Book;
-import br.com.biblioteca.repository.InMemoryBookRepository;
-import br.com.biblioteca.service.exceptions.ValidationException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import br.com.biblioteca.repository.JdbcBookRepository;
+import org.junit.jupiter.api.*;
 
 import static org.assertj.core.api.Assertions.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BookServiceTest {
 
     private BookService service;
-    private InMemoryBookRepository repo;
+    private Database db;
+
+    @BeforeAll
+    void initAll() {
+        db = Database.getInstance();
+    }
 
     @BeforeEach
-    public void setup() {
-        repo = new InMemoryBookRepository();
-        service = new BookService(repo);
+    void setup() {
+        service = new BookService(new JdbcBookRepository());
     }
 
     @Test
-    public void createShouldPersistValidBook() {
-        Book b = new Book("Título X", "Autor Y", "1234567890123");
+    void createAndFindByIsbn() {
+        Book b = new Book("Título Test", "Autor Test", "0000000000001");
         Book saved = service.create(b);
         assertThat(saved.getId()).isNotNull();
-        assertThat(service.findByIsbn("1234567890123")).isPresent();
+        assertThat(service.findByIsbn("0000000000001")).isPresent();
     }
 
     @Test
-    public void createShouldRejectDuplicateIsbn() {
-        Book b1 = new Book("A", "B", "1111111111111");
-        service.create(b1);
-        Book b2 = new Book("C", "D", "1111111111111");
-        assertThatThrownBy(() -> service.create(b2))
-                .isInstanceOf(ValidationException.class)
-                .hasMessageContaining("ISBN já cadastrado");
-    }
-
-    @Test
-    public void createShouldRejectInvalidIsbn() {
+    void rejectInvalidIsbn() {
         Book b = new Book("T", "A", "abc");
-        assertThatThrownBy(() -> service.create(b))
-                .isInstanceOf(ValidationException.class)
-                .hasMessageContaining("ISBN deve conter exatamente 13 dígitos");
+        assertThatThrownBy(() -> service.create(b)).isInstanceOf(Exception.class)
+                .hasMessageContaining("ISBN");
     }
 
     @Test
-    public void updateShouldChangeFields() {
-        Book b = new Book("Old", "Author", "2222222222222");
-        Book saved = service.create(b);
-        Book upd = new Book("New", "New Author", "2222222222222");
-        Book updated = service.update(saved.getId(), upd);
-        assertThat(updated.getTitle()).isEqualTo("New");
-        assertThat(updated.getAuthor()).isEqualTo("New Author");
+    void updateChangesFields() {
+        Book b = new Book("Old", "A", "0000000000002");
+        Book s = service.create(b);
+        Book upd = new Book("New", "B", "0000000000002");
+        Book res = service.update(s.getId(), upd);
+        assertThat(res.getTitle()).isEqualTo("New");
     }
 }

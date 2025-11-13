@@ -1,38 +1,44 @@
 package br.com.biblioteca.service;
 
 import br.com.biblioteca.model.Book;
-import br.com.biblioteca.repository.InMemoryBookRepository;
+import br.com.biblioteca.repository.BookRepository;
+import br.com.biblioteca.repository.JdbcBookRepository;
 import br.com.biblioteca.service.exceptions.BookNotFoundException;
 import br.com.biblioteca.service.exceptions.ValidationException;
+import br.com.biblioteca.util.InputSanitizer;
+import br.com.biblioteca.util.InputValidator;
 
 import java.util.List;
 import java.util.Optional;
 
 public class BookService {
 
-    private final InMemoryBookRepository repository;
+    private final BookRepository repository;
 
-    public BookService(InMemoryBookRepository repository) {
-        this.repository = repository;
+    public BookService() {
+        this(new JdbcBookRepository());
     }
+    public BookService(BookRepository repository) { this.repository = repository; }
 
     public Book create(Book book) {
-        validateBookForCreate(book);
+        sanitizeAndValidate(book);
+        if (repository.existsByIsbn(book.getIsbn())) throw new ValidationException("ISBN já cadastrado");
         return repository.save(book);
     }
 
     public Book update(Long id, Book update) {
-        validateBookForUpdate(id, update);
+        if (id == null) throw new ValidationException("ID é obrigatório");
+        sanitizeAndValidate(update);
+        if (repository.existsByIsbnAndNotId(update.getIsbn(), id)) throw new ValidationException("ISBN já cadastrado por outro livro");
         Book existing = repository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
         existing.setTitle(update.getTitle());
         existing.setAuthor(update.getAuthor());
-        // if isbn changed, update index by saving new book (repository.save replaces index)
         existing.setIsbn(update.getIsbn());
         return repository.save(existing);
     }
 
     public void delete(Long id) {
-        if (repository.findById(id).isEmpty()) throw new BookNotFoundException(id);
+        if (id == null) throw new ValidationException("ID inválido");
         repository.deleteById(id);
     }
 
@@ -40,50 +46,22 @@ public class BookService {
         return repository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
     }
 
-    public Optional<Book> findByIsbn(String isbn) {
-        return repository.findByIsbn(isbn);
-    }
+    public Optional<Book> findByIsbn(String isbn) { return repository.findByIsbn(isbn); }
+    public List<Book> searchByTitle(String title) { return repository.findByTitleContaining(InputSanitizer.sanitize(title)); }
+    public List<Book> searchByAuthor(String author) { return repository.findByAuthorContaining(InputSanitizer.sanitize(author)); }
+    public List<Book> findAll() { return repository.findAll(); }
 
-    public List<Book> searchByTitle(String title) {
-        return repository.findByTitleContainingIgnoreCase(title);
-    }
-
-    public List<Book> searchByAuthor(String author) {
-        return repository.findByAuthorContainingIgnoreCase(author);
-    }
-
-    public List<Book> findAll() {
-        return repository.findAll();
-    }
-
-    private void validateBookForCreate(Book book) {
-        validateCommon(book);
-        if (repository.existsByIsbn(book.getIsbn())) {
-            throw new ValidationException("ISBN já cadastrado");
-        }
-    }
-
-    private void validateBookForUpdate(Long id, Book book) {
-        validateCommon(book);
-        if (repository.existsByIsbnAndNotId(book.getIsbn(), id)) {
-            throw new ValidationException("ISBN já cadastrado por outro livro");
-        }
-    }
-
-    private void validateCommon(Book book) {
+    private void sanitizeAndValidate(Book book) {
         if (book == null) throw new ValidationException("Livro inválido");
-        if (book.getTitle() == null || book.getTitle().isBlank()) {
-            throw new ValidationException("Título é obrigatório");
-        }
-        if (book.getAuthor() == null || book.getAuthor().isBlank()) {
-            throw new ValidationException("Autor é obrigatório");
-        }
-        if (book.getIsbn() == null || book.getIsbn().isBlank()) {
-            throw new ValidationException("ISBN é obrigatório");
-        }
-        String isbn = book.getIsbn();
-        if (!isbn.matches("\\d{13}")) {
-            throw new ValidationException("ISBN deve conter exatamente 13 dígitos numéricos");
+        book.setTitle(InputSanitizer.sanitize(book.getTitle()));
+        book.setAuthor(InputSanitizer.sanitize(book.getAuthor()));
+        book.setIsbn(InputSanitizer.sanitize(book.getIsbn()));
+        try {
+            InputValidator.requireNonEmpty(book.getTitle(), "Título");
+            InputValidator.requireNonEmpty(book.getAuthor(), "Autor");
+            InputValidator.validateIsbn(book.getIsbn());
+        } catch (IllegalArgumentException e) {
+            throw new ValidationException(e.getMessage());
         }
     }
 }

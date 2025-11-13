@@ -3,27 +3,33 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>br.com.biblioteca</groupId>
     <artifactId>biblioteca-javalin</artifactId>
-    <version>1.0.0</version>
-    <name>Biblioteca Javalin</name>
+    <version>1.1.0</version>
+
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javalin.version>6.7.0</javalin.version>
         <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
         <junit.version>5.13.4</junit.version>
         <jqwik.version>1.9.2</jqwik.version>
         <mockito.version>5.18.0</mockito.version>
+        <selenium.version>4.34.0</selenium.version>
+        <webdrivermanager.version>5.4.1</webdrivermanager.version>
+        <h2.version>2.2.224</h2.version>
     </properties>
 
     <dependencies>
-        <!-- Javalin -->
+        <!-- Javalin & rendering -->
         <dependency>
             <groupId>io.javalin</groupId>
             <artifactId>javalin</artifactId>
+            <version>${javalin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.javalin</groupId>
+            <artifactId>javalin-rendering</artifactId>
             <version>${javalin.version}</version>
         </dependency>
 
@@ -34,11 +40,18 @@
             <version>${thymeleaf.version}</version>
         </dependency>
 
-        <!-- Javalin Thymeleaf integration -->
+        <!-- H2 Database -->
         <dependency>
-            <groupId>io.javalin</groupId>
-            <artifactId>javalin-rendering</artifactId>
-            <version>${javalin.version}</version>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+        </dependency>
+
+        <!-- CSV for fixtures -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.10.0</version>
         </dependency>
 
         <!-- Logging -->
@@ -48,7 +61,7 @@
             <version>2.0.9</version>
         </dependency>
 
-        <!-- Testing -->
+        <!-- Tests -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -70,6 +83,20 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Selenium + WebDriverManager for UI tests -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>${webdrivermanager.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Assertions -->
         <dependency>
             <groupId>org.assertj</groupId>
@@ -81,17 +108,16 @@
 
     <build>
         <plugins>
-            <!-- Compiler plugin -->
+            <!-- Compiler -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
+                    <release>21</release>
                 </configuration>
             </plugin>
 
-            <!-- Shade to create executable jar -->
+            <!-- Shade -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -112,7 +138,7 @@
                 </executions>
             </plugin>
 
-            <!-- Surefire for tests -->
+            <!-- Surefire -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -120,6 +146,25 @@
                 <configuration>
                     <useModulePath>false</useModulePath>
                 </configuration>
+            </plugin>
+
+            <!-- Jacoco para cobertura -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.10</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals><goal>report</goal></goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
