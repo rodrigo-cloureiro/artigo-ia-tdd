@@ -9,11 +9,15 @@ import br.com.biblioteca.dao.InMemoryLoanDAO;
 import br.com.biblioteca.service.BookService;
 import br.com.biblioteca.service.LoanService;
 import br.com.biblioteca.service.ValidationService;
+import br.com.biblioteca.util.DataLoader;
 import io.javalin.Javalin;
 import io.javalin.community.plugins.thymeleaf.ThymeleafPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.resourceresolver.ClassLoaderResourceResolver;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Classe principal da aplicação.
@@ -52,6 +56,29 @@ public class Application {
                 engine.setTemplateResolver(resolver);
             }));
             config.staticFiles.add("/public");
+
+            // Tratamento de Erros (Handles)
+            config.router.apiBuilder(() -> {
+                // Manipulador para entradas inválidas (e erros de validação da Service Layer)
+                app.exception(IllegalArgumentException.class, (e, ctx) -> {
+                    logger.warn("Erro de validação ou argumento: {}", e.getMessage());
+                    ctx.status(400).result("Erro de requisição: " + e.getMessage());
+                });
+
+                // Manipulador para erros de estado (Livro Emprestado, etc.)
+                app.exception(IllegalStateException.class, (e, ctx) -> {
+                    logger.warn("Erro de estado do sistema: {}", e.getMessage());
+                    // Redireciona para a home com a mensagem, comum em POSTs
+                    String encodedError = URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
+                    ctx.redirect("/?error=" + encodedError);
+                });
+
+                // Manipulador para not found (Livro ou Rota não existe)
+                app.exception(Exception.class, (e, ctx) -> {
+                    logger.error("Erro interno inesperado: {}", e.getMessage(), e);
+                    ctx.status(500).result("Ocorreu um erro interno no servidor.");
+                });
+            });
         });
 
         // 3. Registro das Rotas
@@ -61,17 +88,21 @@ public class Application {
         // 4. Iniciar o servidor
         app.start(PORT);
         logger.info("Servidor da Biblioteca iniciado em http://localhost:{}", PORT);
-
         populateInitialData(bookService);
     }
 
+    // Altera a função de população para usar o DataLoader
     private static void populateInitialData(BookService bookService) {
+        // Adiciona dados fixos para garantir base
         try {
             bookService.addBook("O Senhor dos Anéis", "J.R.R. Tolkien", "9788535902796");
             bookService.addBook("O Guia do Mochileiro das Galáxias", "Douglas Adams", "9788575422465");
             bookService.addBook("1984", "George Orwell", "9788535914843");
-        } catch (IllegalArgumentException e) {
-            // Ignora
+        } catch (Exception e) {
+            // Ignora se já existirem
         }
+
+        // Carrega dados do CSV
+        DataLoader.loadInitialData(bookService.getBookDAO()); // Necessário metodo getBookDAO na BookService
     }
 }

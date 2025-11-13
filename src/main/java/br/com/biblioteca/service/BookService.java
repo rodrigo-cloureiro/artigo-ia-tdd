@@ -91,4 +91,9 @@ public class BookService {
     public List<Book> searchBooks(String query) {
         return bookDAO.search(query);
     }
+
+    // Novo metodo para o DataLoader acessar a DAO
+    public BookDAO getBookDAO() {
+        return this.bookDAO;
+    }
 }
