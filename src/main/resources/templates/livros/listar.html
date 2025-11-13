@@ -19,6 +19,16 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 
+    <div th:if="${param.erro}" class="alert alert-danger alert-dismissible fade show">
+        <span th:text="${param.erro}">Erro na operação</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:if="${erroBusca}" class="alert alert-warning alert-dismissible fade show">
+        <span th:text="${erroBusca}">Erro na busca</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
     <!-- Formulário de Busca -->
     <div class="card mb-4">
         <div class="card-body">
@@ -31,7 +41,9 @@
                     </select>
                 </div>
                 <div class="col-md-6">
-                    <input type="text" name="termo" class="form-control" placeholder="Digite sua busca...">
+                    <input type="text" name="termo" class="form-control" placeholder="Digite sua busca..."
+                           pattern="[a-zA-Z0-9\sáàâãéèêíïóôõöúçñÁÀÂÃÉÈÊÍÏÓÔÕÖÚÇÑ.,!?;:()\-]*"
+                           maxlength="255">
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-outline-primary w-100">Buscar</button>
@@ -55,6 +67,7 @@
                     <th>Título</th>
                     <th>Autor</th>
                     <th>ISBN</th>
+                    <th>Status</th>
                     <th>Ações</th>
                 </tr>
                 </thead>
@@ -65,10 +78,17 @@
                     <td th:text="${livro.autor}">Autor do Livro</td>
                     <td th:text="${livro.isbn}">1234567890123</td>
                     <td>
+                                <span th:if="${@livroService.estaEmprestado(livro)}"
+                                      class="badge bg-warning">Emprestado</span>
+                        <span th:unless="${@livroService.estaEmprestado(livro)}"
+                              class="badge bg-success">Disponível</span>
+                    </td>
+                    <td>
                         <a th:href="@{/livros/editar/{id}(id=${livro.id})}"
                            class="btn btn-sm btn-outline-primary">Editar</a>
                         <a th:href="@{/livros/deletar/{id}(id=${livro.id})}"
                            class="btn btn-sm btn-outline-danger"
+                           th:disabled="${@livroService.estaEmprestado(livro)}"
                            onclick="return confirm('Tem certeza que deseja excluir este livro?')">Excluir</a>
                     </td>
                 </tr>

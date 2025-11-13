@@ -2,33 +2,54 @@ package com.biblioteca.service;
 
 import com.biblioteca.model.Livro;
 import com.biblioteca.repository.LivroRepository;
+import com.biblioteca.validation.ValidationResult;
 import java.util.List;
 import java.util.Optional;
 
 public class LivroService {
     private final LivroRepository repository;
+    private final EmprestimoService emprestimoService;
 
-    public LivroService(LivroRepository repository) {
+    public LivroService(LivroRepository repository, EmprestimoService emprestimoService) {
         this.repository = repository;
+        this.emprestimoService = emprestimoService;
     }
 
     public Livro cadastrarLivro(Livro livro) {
+        // Validação do objeto
+        ValidationResult validation = livro.validate();
+        if (!validation.isValid()) {
+            throw new IllegalArgumentException(validation.getErrorMessage());
+        }
+
         return repository.salvar(livro);
     }
 
     public Optional<Livro> buscarPorId(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("ID inválido");
+        }
         return repository.buscarPorId(id);
     }
 
     public Optional<Livro> buscarPorIsbn(String isbn) {
+        if (isbn == null || isbn.trim().isEmpty()) {
+            throw new IllegalArgumentException("ISBN não pode ser nulo ou vazio");
+        }
         return repository.buscarPorIsbn(isbn);
     }
 
     public List<Livro> buscarPorTitulo(String titulo) {
+        if (titulo == null || titulo.trim().isEmpty()) {
+            return List.of();
+        }
         return repository.buscarPorTitulo(titulo);
     }
 
     public List<Livro> buscarPorAutor(String autor) {
+        if (autor == null || autor.trim().isEmpty()) {
+            return List.of();
+        }
         return repository.buscarPorAutor(autor);
     }
 
@@ -37,6 +58,16 @@ public class LivroService {
     }
 
     public Optional<Livro> atualizarLivro(Long id, Livro livroAtualizado) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("ID inválido");
+        }
+
+        // Validação do objeto
+        ValidationResult validation = livroAtualizado.validate();
+        if (!validation.isValid()) {
+            throw new IllegalArgumentException(validation.getErrorMessage());
+        }
+
         Optional<Livro> livroExistente = repository.buscarPorId(id);
         if (livroExistente.isPresent()) {
             Livro livro = livroExistente.get();
@@ -56,8 +87,11 @@ public class LivroService {
         return Optional.empty();
     }
 
-    // Atualizar o metodo deletarLivro
     public boolean deletarLivro(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("ID inválido");
+        }
+
         Optional<Livro> livro = repository.buscarPorId(id);
         if (livro.isPresent()) {
             if (podeSerExcluido(livro.get())) {
@@ -69,10 +103,15 @@ public class LivroService {
         return false;
     }
 
-    // Adicionar este metodo à classe LivroService existente
     public boolean podeSerExcluido(Livro livro) {
         return !emprestimoService.livroEstaEmprestado(livro);
     }
 
+    public boolean estaEmprestado(Livro livro) {
+        return emprestimoService.livroEstaEmprestado(livro);
+    }
 
+    public Optional<Object> buscarEmprestimoAtivo(Livro livro) {
+        return emprestimoService.buscarEmprestimoAtivoPorLivro(livro);
+    }
 }

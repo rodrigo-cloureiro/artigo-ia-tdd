@@ -2,6 +2,7 @@ package com.biblioteca.controller;
 
 import com.biblioteca.model.Livro;
 import com.biblioteca.service.LivroService;
+import com.biblioteca.security.SecurityUtils;
 import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
 import java.util.HashMap;
@@ -32,11 +33,12 @@ public class LivroController {
 
     public void cadastrarLivro(Context ctx) {
         try {
-            Livro livro = new Livro(
-                    ctx.formParam("titulo"),
-                    ctx.formParam("autor"),
-                    ctx.formParam("isbn")
-            );
+            // Sanitização das entradas
+            String titulo = SecurityUtils.sanitizeInput(ctx.formParam("titulo"));
+            String autor = SecurityUtils.sanitizeInput(ctx.formParam("autor"));
+            String isbn = SecurityUtils.sanitizeInput(ctx.formParam("isbn"));
+
+            Livro livro = new Livro(titulo, autor, isbn);
 
             livroService.cadastrarLivro(livro);
             ctx.redirect("/livros?sucesso=Livro+cadastrado+com+sucesso");
@@ -48,35 +50,46 @@ public class LivroController {
                     ctx.formParam("autor"),
                     ctx.formParam("isbn")
             ));
-            model.put("erro", e.getMessage());
+            model.put("erro", SecurityUtils.escapeHtml(e.getMessage()));
+            model.put("tituloPagina", "Cadastrar Novo Livro");
+            ctx.render("templates/livros/form.html", model);
+        } catch (SecurityException e) {
+            Map<String, Object> model = new HashMap<>();
+            model.put("livro", new Livro());
+            model.put("erro", "Entrada contém caracteres maliciosos. Por favor, use apenas texto simples.");
             model.put("tituloPagina", "Cadastrar Novo Livro");
             ctx.render("templates/livros/form.html", model);
         }
     }
 
     public void mostrarFormularioEdicao(Context ctx) {
-        Long id = Long.parseLong(ctx.pathParam("id"));
-        Optional<Livro> livro = livroService.buscarPorId(id);
+        try {
+            Long id = Long.parseLong(ctx.pathParam("id"));
+            Optional<Livro> livro = livroService.buscarPorId(id);
 
-        if (livro.isPresent()) {
-            Map<String, Object> model = new HashMap<>();
-            model.put("livro", livro.get());
-            model.put("tituloPagina", "Editar Livro");
-            ctx.render("templates/livros/form.html", model);
-        } else {
-            throw new NotFoundResponse("Livro não encontrado");
+            if (livro.isPresent()) {
+                Map<String, Object> model = new HashMap<>();
+                model.put("livro", livro.get());
+                model.put("tituloPagina", "Editar Livro");
+                ctx.render("templates/livros/form.html", model);
+            } else {
+                throw new NotFoundResponse("Livro não encontrado");
+            }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("ID inválido");
         }
     }
 
     public void atualizarLivro(Context ctx) {
-        Long id = Long.parseLong(ctx.pathParam("id"));
-
         try {
-            Livro livroAtualizado = new Livro(
-                    ctx.formParam("titulo"),
-                    ctx.formParam("autor"),
-                    ctx.formParam("isbn")
-            );
+            Long id = Long.parseLong(ctx.pathParam("id"));
+
+            // Sanitização das entradas
+            String titulo = SecurityUtils.sanitizeInput(ctx.formParam("titulo"));
+            String autor = SecurityUtils.sanitizeInput(ctx.formParam("autor"));
+            String isbn = SecurityUtils.sanitizeInput(ctx.formParam("isbn"));
+
+            Livro livroAtualizado = new Livro(titulo, autor, isbn);
 
             Optional<Livro> livro = livroService.atualizarLivro(id, livroAtualizado);
 
@@ -93,24 +106,35 @@ public class LivroController {
                     ctx.formParam("autor"),
                     ctx.formParam("isbn")
             ));
-            model.put("erro", e.getMessage());
+            model.put("erro", SecurityUtils.escapeHtml(e.getMessage()));
+            model.put("tituloPagina", "Editar Livro");
+            ctx.render("templates/livros/form.html", model);
+        } catch (SecurityException e) {
+            Map<String, Object> model = new HashMap<>();
+            model.put("livro", new Livro(
+                    ctx.formParam("titulo"),
+                    ctx.formParam("autor"),
+                    ctx.formParam("isbn")
+            ));
+            model.put("erro", "Entrada contém caracteres maliciosos. Por favor, use apenas texto simples.");
             model.put("tituloPagina", "Editar Livro");
             ctx.render("templates/livros/form.html", model);
         }
     }
 
-    // Atualizar o metodo deletarLivro no controller
     public void deletarLivro(Context ctx) {
-        Long id = Long.parseLong(ctx.pathParam("id"));
-
         try {
+            Long id = Long.parseLong(ctx.pathParam("id"));
+
             if (livroService.deletarLivro(id)) {
                 ctx.redirect("/livros?sucesso=Livro+excluído+com+sucesso");
             } else {
                 throw new NotFoundResponse("Livro não encontrado");
             }
         } catch (IllegalStateException e) {
-            ctx.redirect("/livros?erro=" + e.getMessage().replace(" ", "+"));
+            ctx.redirect("/livros?erro=" + SecurityUtils.escapeHtmlAttribute(e.getMessage().replace(" ", "+")));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("ID inválido");
         }
     }
 
@@ -120,53 +144,38 @@ public class LivroController {
 
         Map<String, Object> model = new HashMap<>();
 
-        if (tipo != null && termo != null && !termo.trim().isEmpty()) {
-            switch (tipo) {
-                case "titulo":
-                    model.put("livros", livroService.buscarPorTitulo(termo));
-                    model.put("tituloPagina", "Busca por Título: " + termo);
-                    break;
-                case "autor":
-                    model.put("livros", livroService.buscarPorAutor(termo));
-                    model.put("tituloPagina", "Busca por Autor: " + termo);
-                    break;
-                case "isbn":
-                    Optional<Livro> livro = livroService.buscarPorIsbn(termo);
-                    model.put("livros", livro.map(List::of).orElse(List.of()));
-                    model.put("tituloPagina", "Busca por ISBN: " + termo);
-                    break;
-                default:
-                    model.put("livros", livroService.listarTodos());
-                    model.put("tituloPagina", "Todos os Livros");
+        try {
+            if (tipo != null && termo != null && !termo.trim().isEmpty()) {
+                String termoSanitizado = SecurityUtils.sanitizeInput(termo);
+
+                switch (tipo) {
+                    case "titulo":
+                        model.put("livros", livroService.buscarPorTitulo(termoSanitizado));
+                        model.put("tituloPagina", "Busca por Título: " + SecurityUtils.escapeHtml(termoSanitizado));
+                        break;
+                    case "autor":
+                        model.put("livros", livroService.buscarPorAutor(termoSanitizado));
+                        model.put("tituloPagina", "Busca por Autor: " + SecurityUtils.escapeHtml(termoSanitizado));
+                        break;
+                    case "isbn":
+                        Optional<Livro> livro = livroService.buscarPorIsbn(termoSanitizado);
+                        model.put("livros", livro.map(List::of).orElse(List.of()));
+                        model.put("tituloPagina", "Busca por ISBN: " + SecurityUtils.escapeHtml(termoSanitizado));
+                        break;
+                    default:
+                        model.put("livros", livroService.listarTodos());
+                        model.put("tituloPagina", "Todos os Livros");
+                }
+            } else {
+                model.put("livros", livroService.listarTodos());
+                model.put("tituloPagina", "Todos os Livros");
             }
-        } else {
-            model.put("livros", livroService.listarTodos());
-            model.put("tituloPagina", "Todos os Livros");
+        } catch (SecurityException e) {
+            model.put("livros", List.of());
+            model.put("tituloPagina", "Busca - Entrada Inválida");
+            model.put("erroBusca", "Termo de busca contém caracteres maliciosos");
         }
 
         ctx.render("templates/livros/listar.html", model);
-    }
-
-    // Adicionar metodo para verificar disponibilidade
-    public void verificarDisponibilidade(Context ctx) {
-        Long id = Long.parseLong(ctx.pathParam("id"));
-        Optional<Livro> livro = livroService.buscarPorId(id);
-
-        Map<String, Object> model = new HashMap<>();
-
-        if (livro.isPresent()) {
-            model.put("livro", livro.get());
-            boolean disponivel = !livroService.estaEmprestado(livro.get());
-            model.put("disponivel", disponivel);
-
-            if (!disponivel) {
-                var emprestimoAtivo = livroService.buscarEmprestimoAtivo(livro.get());
-                model.put("emprestimoAtivo", emprestimoAtivo.orElse(null));
-            }
-        } else {
-            throw new NotFoundResponse("Livro não encontrado");
-        }
-
-        ctx.render("templates/livros/disponibilidade.html", model);
     }
 }

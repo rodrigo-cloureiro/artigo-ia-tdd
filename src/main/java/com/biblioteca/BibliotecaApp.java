@@ -3,11 +3,13 @@ package com.biblioteca;
 import com.biblioteca.config.ThymeleafConfig;
 import com.biblioteca.controller.EmprestimoController;
 import com.biblioteca.controller.LivroController;
+import com.biblioteca.exception.GlobalExceptionHandler;
 import com.biblioteca.repository.EmprestimoRepository;
 import com.biblioteca.repository.LivroRepository;
 import com.biblioteca.service.EmprestimoService;
 import com.biblioteca.service.LivroService;
 import io.javalin.Javalin;
+import io.javalin.http.staticfiles.Location;
 
 public class BibliotecaApp {
     public static void main(String[] args) {
@@ -15,11 +17,11 @@ public class BibliotecaApp {
         LivroRepository livroRepository = new LivroRepository();
         EmprestimoRepository emprestimoRepository = new EmprestimoRepository();
 
-        LivroService livroService = new LivroService(livroRepository);
+        LivroService livroService = new LivroService(livroRepository, null);
         EmprestimoService emprestimoService = new EmprestimoService(emprestimoRepository, livroService);
 
-        // Atualizar LivroService com referência ao EmprestimoService
-        // (precisa de um setter ou ajuste no construtor)
+        // Atualizar dependência circular
+        livroService = new LivroService(livroRepository, emprestimoService);
 
         LivroController livroController = new LivroController(livroService);
         EmprestimoController emprestimoController = new EmprestimoController(emprestimoService, livroService);
@@ -27,10 +29,21 @@ public class BibliotecaApp {
         // Configurar Thymeleaf
         ThymeleafConfig.configure();
 
-        // Criar aplicação Javalin
+        // Criar aplicação Javalin com configurações de segurança
         Javalin app = Javalin.create(config -> {
-            config.staticFiles.add("/public");
+            config.staticFiles.add(staticFiles -> {
+                staticFiles.hostedPath = "/";
+                staticFiles.directory = "/public";
+                staticFiles.location = Location.CLASSPATH;
+            });
+
+            config.bundledPlugins.enableDevLogging();
         });
+
+        // Configurar tratamento global de exceções
+        app.exception(Exception.class, GlobalExceptionHandler.GENERAL_EXCEPTION_HANDLER);
+        app.exception(IllegalArgumentException.class, GlobalExceptionHandler.VALIDATION_EXCEPTION_HANDLER);
+        app.exception(SecurityException.class, GlobalExceptionHandler.SECURITY_EXCEPTION_HANDLER);
 
         // Configurar rotas de Livros
         app.get("/", ctx -> ctx.redirect("/livros"));
@@ -56,8 +69,10 @@ public class BibliotecaApp {
         // Inicializar aplicação
         app.start(7070);
 
-        System.out.println("Aplicação da Biblioteca rodando em: http://localhost:7070");
+        System.out.println("=== Sistema Biblioteca CRUD ===");
+        System.out.println("Aplicação rodando em: http://localhost:7070");
         System.out.println("Livros: http://localhost:7070/livros");
         System.out.println("Empréstimos: http://localhost:7070/emprestimos");
+        System.out.println("=================================");
     }
 }

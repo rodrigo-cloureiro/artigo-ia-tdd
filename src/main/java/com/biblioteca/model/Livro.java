@@ -1,7 +1,9 @@
 package com.biblioteca.model;
 
+import com.biblioteca.security.SecurityUtils;
+import com.biblioteca.validation.ValidationResult;
+import com.biblioteca.validation.Validator;
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 public class Livro {
     private Long id;
@@ -9,7 +11,6 @@ public class Livro {
     private String autor;
     private String isbn;
 
-    private static final Pattern ISBN_PATTERN = Pattern.compile("^\\d{13}$");
     private static long contadorId = 1;
 
     public Livro() {
@@ -29,7 +30,7 @@ public class Livro {
     public String getAutor() { return autor; }
     public String getIsbn() { return isbn; }
 
-    // Setters com validação
+    // Setters com validação e sanitização
     public void setId(Long id) {
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("ID não pode ser nulo ou menor que 1");
@@ -39,29 +40,46 @@ public class Livro {
 
     public void setTitulo(String titulo) {
         validarCampoNaoNulo(titulo, "título");
-        this.titulo = titulo.trim();
+        String tituloSanitizado = SecurityUtils.sanitizeInput(titulo);
+
+        if (!SecurityUtils.isValidTitle(tituloSanitizado)) {
+            throw new IllegalArgumentException("Título inválido. Use apenas letras, números e espaços (máx. 255 caracteres)");
+        }
+
+        this.titulo = tituloSanitizado;
     }
 
     public void setAutor(String autor) {
         validarCampoNaoNulo(autor, "autor");
-        this.autor = autor.trim();
+        String autorSanitizado = SecurityUtils.sanitizeInput(autor);
+
+        if (!SecurityUtils.isValidAuthor(autorSanitizado)) {
+            throw new IllegalArgumentException("Autor inválido. Use apenas letras e espaços (máx. 100 caracteres)");
+        }
+
+        this.autor = autorSanitizado;
     }
 
     public void setIsbn(String isbn) {
         validarCampoNaoNulo(isbn, "ISBN");
-        String isbnLimpo = isbn.trim();
+        String isbnSanitizado = SecurityUtils.sanitizeInput(isbn);
 
-        if (!ISBN_PATTERN.matcher(isbnLimpo).matches()) {
-            throw new IllegalArgumentException("ISBN deve conter exatamente 13 dígitos numéricos");
+        if (!SecurityUtils.isValidISBN(isbnSanitizado)) {
+            throw new IllegalArgumentException("ISBN inválido. Deve ser um código ISBN-13 válido com 13 dígitos");
         }
 
-        this.isbn = isbnLimpo;
+        this.isbn = isbnSanitizado;
     }
 
     private void validarCampoNaoNulo(String valor, String nomeCampo) {
         if (valor == null || valor.trim().isEmpty()) {
             throw new IllegalArgumentException(nomeCampo + " não pode ser nulo ou vazio");
         }
+    }
+
+    // Validação completa do objeto
+    public ValidationResult validate() {
+        return Validator.validateLivro(this);
     }
 
     @Override
