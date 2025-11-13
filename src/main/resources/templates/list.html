@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Biblioteca - Lista de livros</title>
+    <link rel="stylesheet" href="/static/styles.css"/>
+</head>
+<body>
+<div class="container">
+    <h1>Acervo da Biblioteca</h1>
+
+    <div class="actions">
+        <a class="btn" href="/books/new">Cadastrar novo livro</a>
+    </div>
+
+    <form class="search" action="/" method="get">
+        <input type="text" name="q" placeholder="Buscar por título" th:value="${q}" />
+        <input type="text" name="author" placeholder="Buscar por autor" th:value="${author}" />
+        <input type="text" name="isbn" placeholder="Buscar por ISBN (13 dígitos)" th:value="${isbn}" />
+        <button type="submit">Buscar</button>
+        <a href="/">Limpar</a>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Título</th>
+            <th>Autor</th>
+            <th>ISBN</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.title}">Título</td>
+            <td th:text="${book.author}">Autor</td>
+            <td th:text="${book.isbn}">ISBN</td>
+            <td>
+                <a th:href="@{'/books/' + ${book.id}}">Ver</a>
+                <a th:href="@{'/books/' + ${book.id} + '/edit'}">Editar</a>
+                <form th:action="@{'/books/' + ${book.id} + '/delete'}" method="post" style="display:inline">
+                    <button type="submit" onclick="return confirm('Confirma exclusão?')">Excluir</button>
+                </form>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(books)}">
+            <td colspan="4">Nenhum livro encontrado</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
