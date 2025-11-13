@@ -1,17 +1,26 @@
 package br.com.biblioteca;
 
 import br.com.biblioteca.controller.BookController;
-import br.com.biblioteca.repository.InMemoryBookRepository;
-import br.com.biblioteca.service.BookService;
+import br.com.biblioteca.controller.LoanController;
 import br.com.biblioteca.model.Book;
+import br.com.biblioteca.repository.InMemoryBookRepository;
+import br.com.biblioteca.repository.InMemoryLoanRepository;
+import br.com.biblioteca.service.BookService;
+import br.com.biblioteca.service.LoanService;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
 
 public class App {
     public static void main(String[] args) {
         InMemoryBookRepository repo = new InMemoryBookRepository();
-        BookService service = new BookService(repo);
-        BookController controller = new BookController(service);
+        BookService bookService = new BookService(repo);
+
+        InMemoryLoanRepository loanRepo = new InMemoryLoanRepository();
+        LoanService loanService = new LoanService(loanRepo, bookService);
+
+        // controllers
+        BookController bookController = new BookController(bookService, loanService);
+        LoanController loanController = new LoanController(loanService, bookService);
 
         // Seed sample data
         try {
@@ -26,16 +35,23 @@ public class App {
             cfg.contextPath = "/";
         }).start(7000);
 
-        app.get("/", controller.listView);
-        app.get("/books/new", controller.showCreateForm);
-        app.post("/books", controller.create);
+        // Book routes
+        app.get("/", bookController.listView);
+        app.get("/books/new", bookController.showCreateForm);
+        app.post("/books", bookController.create);
+        app.get("/books/:id", bookController.view);
+        app.get("/books/:id/edit", bookController.showEditForm);
+        app.post("/books/:id", bookController.update);
+        app.post("/books/:id/delete", bookController.delete);
 
-        app.get("/books/:id", controller.view);
-        app.get("/books/:id/edit", controller.showEditForm);
-        app.post("/books/:id", controller.update);
-        app.post("/books/:id/delete", controller.delete);
+        // Loan routes
+        app.get("/loans", loanController.listView);
+        app.get("/loans/new", loanController.showCreateForm);
+        app.post("/loans", loanController.create);
+        app.get("/loans/:id/return", loanController.showReturn);
+        app.post("/loans/:id/return", loanController.attemptReturn);
+        app.post("/loans/:id/pay", loanController.payFine);
 
-        // search endpoints via query params already handled in listView
         System.out.println("Aplicação iniciada em http://localhost:7000");
     }
 }

@@ -2,9 +2,9 @@ package br.com.biblioteca.controller;
 
 import br.com.biblioteca.model.Book;
 import br.com.biblioteca.service.BookService;
+import br.com.biblioteca.service.LoanService;
 import br.com.biblioteca.service.exceptions.BookNotFoundException;
 import br.com.biblioteca.service.exceptions.ValidationException;
-import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.plugin.rendering.template.JavalinThymeleaf;
 import org.thymeleaf.TemplateEngine;
@@ -17,14 +17,19 @@ import java.util.Map;
 public class BookController {
 
     private final BookService service;
+    private final LoanService loanService; // pode ser null em testes
 
     public BookController(BookService service) {
+        this(service, null);
+    }
+
+    public BookController(BookService service, LoanService loanService) {
         this.service = service;
+        this.loanService = loanService;
         setupThymeleaf();
     }
 
     private void setupThymeleaf() {
-        // Configure Thymeleaf template resolver
         ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
         resolver.setPrefix("/templates/");
         resolver.setSuffix(".html");
@@ -127,6 +132,10 @@ public class BookController {
     public Handler delete = ctx -> {
         Long id = Long.valueOf(ctx.pathParam("id"));
         try {
+            if (loanService != null && loanService.isBookLoaned(id)) {
+                ctx.status(400).result("Livro não pode ser excluído: encontra-se emprestado.");
+                return;
+            }
             service.delete(id);
             ctx.redirect("/");
         } catch (BookNotFoundException e) {

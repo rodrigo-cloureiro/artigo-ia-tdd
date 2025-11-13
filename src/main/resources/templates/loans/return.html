@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Devolução</title>
+    <link rel="stylesheet" href="/static/styles.css"/>
+</head>
+<body>
+<div class="container">
+    <h1>Devolução do Empréstimo</h1>
+    <div>
+        <p><strong>Empréstimo ID:</strong> <span th:text="${loan.id}"></span></p>
+        <p><strong>Livro ID:</strong> <span th:text="${loan.bookId}"></span></p>
+        <p><strong>Tomador:</strong> <span th:text="${loan.borrower}"></span></p>
+        <p><strong>Data Empréstimo:</strong> <span th:text="${loan.loanDate}"></span></p>
+        <p><strong>Data prevista:</strong> <span th:text="${loan.dueDate}"></span></p>
+        <p><strong>Data de hoje (devolução):</strong> <span th:text="${today}"></span></p>
+    </div>
+
+    <form th:action="@{'/loans/' + ${loan.id} + '/return'}" method="post">
+        <button type="submit">Registrar devolução</button>
+        <a href="/loans" class="btn">Cancelar</a>
+    </form>
+</div>
+</body>
+</html>
