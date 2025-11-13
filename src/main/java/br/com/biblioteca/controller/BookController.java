@@ -5,32 +5,18 @@ import br.com.biblioteca.service.BookService;
 import br.com.biblioteca.service.LoanService;
 import br.com.biblioteca.service.exceptions.ValidationException;
 import io.javalin.http.Handler;
-import io.javalin.plugin.rendering.template.JavalinThymeleaf;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class BookController {
-
-    private final BookService service;
-    private final LoanService loanService;
+    private BookService service;
+    private LoanService loanService;
 
     public BookController(BookService service, LoanService loanService) {
-        this.service = service; this.loanService = loanService;
-        setupThymeleaf();
-    }
-
-    private void setupThymeleaf() {
-        ClassLoaderTemplateResolver resolver = new ClassLoaderTemplateResolver();
-        resolver.setPrefix("/templates/");
-        resolver.setSuffix(".html");
-        resolver.setCharacterEncoding("UTF-8");
-        TemplateEngine engine = new TemplateEngine();
-        engine.setTemplateResolver(resolver);
-        JavalinThymeleaf.configure(engine);
+        this.service = service;
+        this.loanService = loanService;
     }
 
     public Handler listView = ctx -> {

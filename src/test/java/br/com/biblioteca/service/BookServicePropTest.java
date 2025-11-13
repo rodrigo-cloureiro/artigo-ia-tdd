@@ -3,7 +3,8 @@ package br.com.biblioteca.service;
 import br.com.biblioteca.model.Book;
 import br.com.biblioteca.repository.JdbcBookRepository;
 import net.jqwik.api.*;
-import org.junit.jupiter.api.BeforeEach;
+import net.jqwik.api.constraints.AlphaChars;
+import net.jqwik.api.lifecycle.BeforeProperty;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -11,7 +12,7 @@ public class BookServicePropTest {
 
     private BookService service;
 
-    @BeforeEach
+    @BeforeProperty
     void setup() { service = new BookService(new JdbcBookRepository()); }
 
     @Property

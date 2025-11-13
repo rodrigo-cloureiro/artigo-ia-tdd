@@ -1,21 +1,19 @@
 package br.com.biblioteca.service;
 
 import br.com.biblioteca.model.Book;
-import br.com.biblioteca.repository.InMemoryBookRepository;
+import br.com.biblioteca.repository.BookRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import static org.mockito.Mockito.*;
 
 public class BookServiceMockitoTest {
-
-    private InMemoryBookRepository repo;
+    private BookRepository repo;
     private BookService service;
 
     @BeforeEach
     void setUp() {
-        repo = mock(InMemoryBookRepository.class);
+        repo = mock(BookRepository.class);
         service = new BookService(repo);
     }
 

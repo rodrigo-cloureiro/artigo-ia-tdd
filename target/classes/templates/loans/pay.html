@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pagamento de Multa</title>
+    <link rel="stylesheet" href="/static/styles.css"/>
+</head>
+<body>
+<div class="container">
+    <h1>Pagamento de Multa</h1>
+    <p>Existe uma multa pendente para o empréstimo <strong th:text="${loan.id}"></strong>.</p>
+    <p>Valor devido: <strong th:text="${fine}"></strong></p>
+    <form th:action="@{'/loans/' + ${loan.id} + '/pay'}" method="post">
+        <button type="submit">Pagar e registrar devolução</button>
+        <a href="/loans" class="btn">Cancelar</a>
+    </form>
+</div>
+</body>
+</html>
