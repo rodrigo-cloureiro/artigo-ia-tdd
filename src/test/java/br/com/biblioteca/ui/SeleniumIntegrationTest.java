@@ -45,13 +45,14 @@ public class SeleniumIntegrationTest {
     }
 
     @Test
-    void createBookViaForm() {
+    void createBookViaForm() throws InterruptedException {
         driver.get("http://localhost:7000/books/new");
         driver.findElement(By.name("title")).sendKeys("Selenium Book");
         driver.findElement(By.name("author")).sendKeys("Tester");
         driver.findElement(By.name("isbn")).sendKeys("9999999999999");
         driver.findElement(By.cssSelector("button[type='submit']")).click();
         // after redirect to /, check book appears in list by ISBN text
+        Thread.sleep(200);
         driver.get("http://localhost:7000/");
         assertThat(driver.getPageSource()).contains("9999999999999");
     }
