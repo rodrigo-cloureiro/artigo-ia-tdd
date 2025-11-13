@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${pageTitle}">Devolver Livro</title>
+</head>
+<body>
+
+<div th:replace="~{layout :: content}">
+    <div th:fragment="content">
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+
+                        <h2 class="h4 mb-4">Confirmar Devolução</h2>
+
+                        <div class="mb-4 p-3 bg-light border rounded-3">
+                            <h5 class="mb-1" th:text="${book.title()}">Título do Livro</h5>
+                            <ul class="list-unstyled text-muted mb-0">
+                                <li th:text="'Leitor: ' + ${loan.borrowerName()}"></li>
+                                <li th:text="'Emprestado em: ' + ${#temporals.format(loan.loanDate(), 'dd/MM/yyyy')}"></li>
+                                <li th:text="'Devolução Prevista: ' + ${#temporals.format(loan.dueDate(), 'dd/MM/yyyy')}"></li>
+                            </ul>
+                        </div>
+
+                        <div class="mb-4">
+                            <h4>Situação e Multa</h4>
+                            <p>
+                                O prazo gratuito é de <strong>10 dias</strong>. A multa é de <strong>R$ 5,00</strong> fixo +
+                                <strong>R$ 0,50/dia</strong> a partir do 11º dia.
+                            </p>
+
+                            <div th:if="${fine.fineAmount() == 0.0}" class="alert alert-success">
+                                <i class="bi bi-check-circle-fill"></i> <strong>Sem multa!</strong> O livro está sendo devolvido dentro do prazo gratuito.
+                            </div>
+
+                            <div th:if="${fine.fineAmount() > 0.0}" class="alert alert-warning">
+                                <h5 class="alert-heading"><i class="bi bi-exclamation-triangle-fill"></i> Multa Pendente!</h5>
+                                <p class="mb-1">
+                                    <strong th:text="${fine.daysOverdue()}">X</strong> dia(s) de atraso (após o período gratuito).
+                                </p>
+                                <hr class="my-2">
+                                <p class="mb-0 fs-4">
+                                    Total a pagar: <strong class="text-danger"
+                                                           th:text="'R$ ' + ${#numbers.formatDecimal(fine.fineAmount(), 1, 2, 'COMMA')}">R$ 5,50</strong>
+                                </p>
+                                <div class="form-text">
+                                    O retorno será processado após a confirmação do pagamento.
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <form method="POST" th:action="@{/return/{id}(id=${loan.id()})}">
+                            <div class="d-flex justify-content-end">
+                                <a th:href="@{/loans}" class="btn btn-outline-secondary me-2">
+                                    <i class="bi bi-x-lg"></i> Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-cash-stack"></i>
+                                    <span th:text="${fine.fineAmount() > 0.0} ? 'Confirmar Pagamento e Devolução' : 'Confirmar Devolução'">
+                                            Confirmar Devolução
+                                        </span>
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

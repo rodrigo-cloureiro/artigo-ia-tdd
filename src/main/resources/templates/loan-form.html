@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${pageTitle}">Emprestar Livro</title>
+</head>
+<body>
+
+<div th:replace="~{layout :: content}">
+    <div th:fragment="content">
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+
+                        <h2 class="h4 mb-4">Emprestar Livro</h2>
+
+                        <div th:if="${error}" class="alert alert-danger" role="alert">
+                            <strong>Erro:</strong> <span th:text="${error}"></span>
+                        </div>
+
+                        <div class="mb-4 p-3 bg-light border rounded-3">
+                            <h5 class="mb-1" th:text="${book.title()}">Título do Livro</h5>
+                            <span class="text-muted" th:text="${book.author()}">Autor</span>
+                        </div>
+
+                        <form method="POST" th:action="@{/lend}">
+
+                            <input type="hidden" name="bookId" th:value="${book.id()}">
+
+                            <div class="mb-3">
+                                <label for="borrowerName" class="form-label">Nome do Leitor</label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="borrowerName"
+                                       name="borrowerName"
+                                       th:value="${borrowerName}"
+                                       placeholder="Nome completo"
+                                       required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="daysToLend" class="form-label">Prazo (em dias)</label>
+                                <input type="number"
+                                       class="form-control"
+                                       id="daysToLend"
+                                       name="daysToLend"
+                                       th:value="${daysToLend}"
+                                       min="1"
+                                       max="365"
+                                       required>
+                                <div class="form-text">
+                                    Prazo máximo gratuito: 10 dias.
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <a th:href="@{/}" class="btn btn-outline-secondary me-2">
+                                    <i class="bi bi-x-lg"></i> Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-lg"></i> Confirmar Empréstimo
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
