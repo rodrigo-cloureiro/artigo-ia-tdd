@@ -56,7 +56,23 @@ public class LivroService {
         return Optional.empty();
     }
 
+    // Atualizar o metodo deletarLivro
     public boolean deletarLivro(Long id) {
-        return repository.deletar(id);
+        Optional<Livro> livro = repository.buscarPorId(id);
+        if (livro.isPresent()) {
+            if (podeSerExcluido(livro.get())) {
+                return repository.deletar(id);
+            } else {
+                throw new IllegalStateException("Não é possível excluir um livro que está emprestado");
+            }
+        }
+        return false;
     }
+
+    // Adicionar este metodo à classe LivroService existente
+    public boolean podeSerExcluido(Livro livro) {
+        return !emprestimoService.livroEstaEmprestado(livro);
+    }
+
+
 }

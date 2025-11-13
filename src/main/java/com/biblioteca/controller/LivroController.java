@@ -99,13 +99,18 @@ public class LivroController {
         }
     }
 
+    // Atualizar o metodo deletarLivro no controller
     public void deletarLivro(Context ctx) {
         Long id = Long.parseLong(ctx.pathParam("id"));
 
-        if (livroService.deletarLivro(id)) {
-            ctx.redirect("/livros?sucesso=Livro+excluído+com+sucesso");
-        } else {
-            throw new NotFoundResponse("Livro não encontrado");
+        try {
+            if (livroService.deletarLivro(id)) {
+                ctx.redirect("/livros?sucesso=Livro+excluído+com+sucesso");
+            } else {
+                throw new NotFoundResponse("Livro não encontrado");
+            }
+        } catch (IllegalStateException e) {
+            ctx.redirect("/livros?erro=" + e.getMessage().replace(" ", "+"));
         }
     }
 
@@ -140,5 +145,28 @@ public class LivroController {
         }
 
         ctx.render("templates/livros/listar.html", model);
+    }
+
+    // Adicionar metodo para verificar disponibilidade
+    public void verificarDisponibilidade(Context ctx) {
+        Long id = Long.parseLong(ctx.pathParam("id"));
+        Optional<Livro> livro = livroService.buscarPorId(id);
+
+        Map<String, Object> model = new HashMap<>();
+
+        if (livro.isPresent()) {
+            model.put("livro", livro.get());
+            boolean disponivel = !livroService.estaEmprestado(livro.get());
+            model.put("disponivel", disponivel);
+
+            if (!disponivel) {
+                var emprestimoAtivo = livroService.buscarEmprestimoAtivo(livro.get());
+                model.put("emprestimoAtivo", emprestimoAtivo.orElse(null));
+            }
+        } else {
+            throw new NotFoundResponse("Livro não encontrado");
+        }
+
+        ctx.render("templates/livros/disponibilidade.html", model);
     }
 }
