@@ -66,6 +66,9 @@ jobs:
       - name: Run Checkstyle (Maven)
         run: mvn checkstyle:checkstyle
 
+      - name: Prepare Checkstyle output folder
+        run: mkdir -p reports/${{ matrix.branch }}/checkstyle-result
+
       - name: Move Checkstyle report
         run: |
           mv target/site/css reports/${{ matrix.branch }}/checkstyle-result/css
