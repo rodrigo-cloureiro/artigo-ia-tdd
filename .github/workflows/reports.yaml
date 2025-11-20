@@ -41,7 +41,7 @@ jobs:
           queries: security-extended,security-and-quality
 
       - name: Project compile
-        run: mvn compile test "-Dtest=**,!com.br.infnet.selenium.**"
+        run: mvn compile test "-Dtest=**,!**.selenium.**"
 
       - name: Generate coverage report
         run: mvn jacoco:report
