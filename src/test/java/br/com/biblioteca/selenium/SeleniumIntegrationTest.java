@@ -1,4 +1,4 @@
-package br.com.biblioteca.ui;
+package br.com.biblioteca.selenium;
 
 import br.com.biblioteca.App;
 import io.github.bonigarcia.wdm.WebDriverManager;
