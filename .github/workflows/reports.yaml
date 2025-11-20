@@ -41,7 +41,7 @@ jobs:
           queries: security-extended,security-and-quality
 
       - name: Project compile
-        run: mvn compile -DskipTests
+        run: mvn compile
 
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v4
@@ -67,7 +67,10 @@ jobs:
         run: mvn checkstyle:checkstyle
 
       - name: Move Checkstyle report
-        run: mv target/checkstyle-result.xml reports/${{ matrix.branch }}/checkstyle-result.xml
+        run: |
+          mv target/site/css reports/${{ matrix.branch }}/checkstyle-result
+          mv target/site/images reports/${{ matrix.branch }}/checkstyle-result
+          mv target/site/checkstyle.html reports/${{ matrix.branch }}/checkstyle-result
 
       - name: Run SpotBugs
         run: mvn spotbugs:spotbugs
