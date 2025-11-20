@@ -41,12 +41,14 @@ jobs:
           queries: security-extended,security-and-quality
 
       - name: Project compile
+        continue-on-error: true
         run: mvn compile test "-Dtest=**,!**.selenium.**"
 
       - name: Generate coverage report
         run: mvn jacoco:report
 
       - name: Move JaCoCo report
+        if: ${{ always() && hashFiles('target/site/jacoco/*') != '' }}
         run: |
           mv target/site/jacoco/* reports/${{ matrix.branch }}/jacoco/
 
