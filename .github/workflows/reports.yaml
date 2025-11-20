@@ -1,0 +1,84 @@
+name: Reports
+
+on:
+  workflow_dispatch:
+
+jobs:
+  analyse:
+    name: Code Analyse
+    runs-on: ubuntu-latest
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        branch: [ "main", "teste" ]
+        language: [ "java" ]
+
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.branch }}
+
+      - name: Configure JDK (Java 21)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Create a folder for the reports
+        run: mkdir -p reports/${{ matrix.branch }}
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          queries: security-extended,security-and-quality
+
+      - name: Project compile
+        run: mvn compile -DskipTests
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          output: reports/${{ matrix.branch }}
+          category: "/language:${{ matrix.language }}"
+
+      - name: Rename the SARIF file
+        run: |
+          ORIGINAL="reports/${{ matrix.branch }}/${{ matrix.language }}.sarif"
+          NOVO="reports/${{ matrix.branch }}/codeql-results.sarif"
+          mv "$ORIGINAL" "$NOVO"
+
+      - name: Run CLOC
+        uses: djdefi/cloc-action@6
+        with:
+          options: --exclude-lang=YAML --md --report-file=cloc.md
+
+      - name: Move CLOC report
+        run: mv cloc.md reports/${{ matrix.branch }}/cloc.md
+
+      - name: Run Checkstyle (Maven)
+        run: mvn checkstyle:checkstyle
+
+      - name: Move Checkstyle report
+        run: mv target/checkstyle-result.xml reports/${{ matrix.branch }}/checkstyle-result.xml
+
+      - name: Run SpotBugs
+        run: mvn spotbugs:spotbugs
+
+      - name: Move SpotBugs report
+        run: |
+          mv target/spotbugsXml.xml reports/${{ matrix.branch }}/spotbugs.xml
+          mv target/site/spotbugs.html reports/${{ matrix.branch }}/spotbugs.html
+
+      - name: Uploading reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: "reports-${{ matrix.branch }}"
+          path: reports/${{ matrix.branch }}
