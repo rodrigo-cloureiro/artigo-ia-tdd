@@ -68,8 +68,8 @@ jobs:
 
       - name: Move Checkstyle report
         run: |
-          mv target/site/css reports/${{ matrix.branch }}/checkstyle-result
-          mv target/site/images reports/${{ matrix.branch }}/checkstyle-result
+          mv target/site/css reports/${{ matrix.branch }}/checkstyle-result/css
+          mv target/site/images reports/${{ matrix.branch }}/checkstyle-result/images
           mv target/site/checkstyle.html reports/${{ matrix.branch }}/checkstyle-result
 
       - name: Run SpotBugs
