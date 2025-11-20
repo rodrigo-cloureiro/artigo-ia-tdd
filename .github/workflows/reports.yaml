@@ -41,7 +41,14 @@ jobs:
           queries: security-extended,security-and-quality
 
       - name: Project compile
-        run: mvn compile
+        run: mvn compile test "-Dtest=**,!com.br.infnet.selenium.**"
+
+      - name: Generate coverage report
+        run: mvn jacoco:report
+
+      - name: Move JaCoCo report
+        run: |
+          mv target/site/jacoco/* reports/${{ matrix.branch }}/jacoco/
 
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v4
