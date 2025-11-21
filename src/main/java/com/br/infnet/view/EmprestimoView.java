@@ -1,90 +1,75 @@
 package com.br.infnet.view;
 
+import com.br.infnet.model.Emprestimo;
 import com.br.infnet.model.Livro;
-import com.br.infnet.service.LivroService;
+import com.br.infnet.service.EmprestimoService;
 
 import java.util.List;
-import java.util.Map;
 
-public class LivroView {
+public class EmprestimoView {
 
-    public static String renderList(List<Livro> livros) {
+    public static String renderEmprestimos(List<Emprestimo> emprestimos, EmprestimoService emprestimoService) {
         StringBuilder html = new StringBuilder();
-        html.append(getHeader("Livros do Acervo"));
+        html.append(getHeader("Livros Emprestados"));
         html.append("<div class='container'>");
-        html.append("<h1>Sistema de Gerenciamento da Biblioteca Nacional</h1>");
-        html.append("<nav class='nav'>");
-        html.append("<a href='/livros/novo' class='btn'>Cadastrar novo livro</a>");
-        html.append("<a href='/emprestimos' class='btn'>Empréstimos</a>");
-        html.append("<a href='/buscar' class='btn'>Buscar</a>");
-        html.append("</nav>");
+        html.append("<h1>Empréstimos Ativos</h1>");
+        html.append("<a href='/livros' class='btn'>Voltar ao Acervo</a>");
 
-        if (livros.isEmpty()) {
-            html.append("<p>Nenhum livro cadastrado.</p>");
+        if (emprestimos.isEmpty()) {
+            html.append("<p>Nenhum empréstimo ativo.</p>");
         } else {
             html.append("<table class='table'>");
-            html.append("<tr><th>ID</th><th>Título</th><th>Autor</th><th>ISBN</th><th>Status</th><th>Ações</th></tr>");
-            for (Livro livro : livros) {
-                html.append("<tr>");
-                html.append("<td>").append(livro.getId()).append("</td>");
-                html.append("<td>").append(livro.getTitulo()).append("</td>");
-                html.append("<td>").append(livro.getAutor()).append("</td>");
-                html.append("<td>").append(livro.getIsbn()).append("</td>");
-                html.append("<td>").append(livro.isDisponivel() ? "Disponível" : "Emprestado").append("</td>");
-                html.append("<td>");
-                html.append("<div class='button-group'>");
-                if (livro.isDisponivel()) {
-                    html.append("<a href='/livros/").append(livro.getId()).append("/editar' class='btn btn-small btn-secondary'>Editar</a>");
-                    html.append("<a href='/emprestimos/livros/").append(livro.getId()).append("/emprestar' class='btn btn-small'>Emprestar</a>");
+            html.append("<tr><th>ID</th><th>Título</th><th>Autor</th><th>Data Empréstimo</th><th>Prazo</th><th>Data Estimada</th><th>Ações</th></tr>");
+
+            for (Emprestimo emprestimo : emprestimos) {
+                Livro livro = emprestimoService.obterLivroPorId(emprestimo.getLivroId());
+                System.out.println("Livro ID " + emprestimo.getLivroId() + " título: " + (livro != null ? livro.getTitulo() : "null"));
+                if (livro != null) {
+                    html.append("<tr>");
+                    html.append("<td>").append(emprestimo.getId()).append("</td>");
+                    html.append("<td>").append(livro.getTitulo()).append("</td>");
+                    html.append("<td>").append(livro.getAutor()).append("</td>");
+                    html.append("<td>").append(emprestimo.getDataEmprestimo()).append("</td>");
+                    html.append("<td>").append(emprestimo.getPrazoDevolucao()).append(" dias</td>");
+                    html.append("<td>").append(emprestimo.getDataEstimadaDevolucao()).append("</td>");
+                    html.append("<td>");
+                    html.append("<form style='display:inline' method='post' action='/emprestimos/livros/").append(emprestimo.getLivroId()).append("/devolver'>");
+                    html.append("<button type='submit' class='btn-small'>Devolver</button>");
+                    html.append("</form>");
+                    html.append("</td>");
+                    html.append("</tr>");
                 }
-                html.append("<form style='display:inline' method='post' action='/livros/").append(livro.getId()).append("/remover'>");
-                html.append("<button type='submit' class='btn-small btn-danger' onclick='return confirm(\"Confirma exclusão?\")'>Remover</button>");
-                html.append("</form>");
-                html.append("</div>");
-                html.append("</td>");
-                html.append("</tr>");
             }
             html.append("</table>");
         }
-
         html.append("</div>");
         html.append(getFooter());
         return html.toString();
     }
 
+    public static String renderFormEmprestimo(Livro livro) {
+        return renderFormEmprestimo(livro, null);
+    }
 
-    public static String renderForm(Map<String, Object> model) {
-        boolean isEdit = model.containsKey("id");
-        String title = isEdit ? "Editar Livro" : "Novo Livro";
-        String action = isEdit ? "/livros/" + model.get("id") + "/editar" : "/livros";
-
+    public static String renderFormEmprestimo(Livro livro, String erro) {
         StringBuilder html = new StringBuilder();
-        html.append(getHeader(title));
+        html.append(getHeader("Emprestar Livro"));
         html.append("<div class='container'>");
-        html.append("<h1>").append(title).append("</h1>");
+        html.append("<h1>Emprestar Livro</h1>");
+        html.append("<p><strong>Título:</strong> ").append(livro.getTitulo()).append("</p>");
+        html.append("<p><strong>Autor:</strong> ").append(livro.getAutor()).append("</p>");
 
-        if (model.containsKey("erro")) {
-            html.append("<div class='error'>").append(model.get("erro")).append("</div>");
+        // Exibir erro se existir
+        if (erro != null && !erro.trim().isEmpty()) {
+            html.append("<div class='error'>").append(erro).append("</div>");
         }
-
-        html.append("<form method='post' action='").append(action).append("'>");
+        html.append("<form method='post' action='/emprestimos/livros/").append(livro.getId()).append("/emprestar'>");
         html.append("<div class='form-group'>");
-        html.append("<label for='titulo'>Título:</label>");
-        html.append("<input type='text' id='titulo' name='titulo' value='").append(model.getOrDefault("titulo", "")).append("' required>");
+        html.append("<label for='prazo'>Prazo (dias):</label>");
+        html.append("<input type='number' id='prazo' name='prazo' value='7' required>");
         html.append("</div>");
-
-        html.append("<div class='form-group'>");
-        html.append("<label for='autor'>Autor:</label>");
-        html.append("<input type='text' id='autor' name='autor' value='").append(model.getOrDefault("autor", "")).append("' required>");
-        html.append("</div>");
-
-        html.append("<div class='form-group'>");
-        html.append("<label for='isbn'>ISBN (13 caracteres):</label>");
-        html.append("<input type='text' id='isbn' name='isbn' value='").append(model.getOrDefault("isbn", "")).append("' required>");
-        html.append("</div>");
-
         html.append("<div class='form-actions'>");
-        html.append("<button type='submit' class='btn'>").append(isEdit ? "Atualizar" : "Cadastrar").append("</button>");
+        html.append("<button type='submit' class='btn'>Emprestar</button>");
         html.append("<a href='/livros' class='btn btn-secondary'>Cancelar</a>");
         html.append("</div>");
         html.append("</form>");
@@ -93,103 +78,30 @@ public class LivroView {
         return html.toString();
     }
 
-    public static String renderBusca(String tipo, String termo, LivroService service) {
-        StringBuilder html = new StringBuilder();
-        html.append(getHeader("Buscar Livros"));
-        html.append("<div class='container'>");
-        html.append("<h1>Buscar Livros</h1>");
+    public static String renderMultaPendente(String mensagemMulta) {
 
-        html.append("<form method='get' action='/buscar'>");
-        html.append("<div class='form-group'>");
-        html.append("<label for='tipo'>Buscar por:</label>");
-        html.append("<select id='tipo' name='tipo' required>");
-        html.append("<option value=''>Selecione...</option>");
-        html.append("<option value='titulo'").append("titulo".equals(tipo) ? " selected" : "").append(">Título</option>");
-        html.append("<option value='autor'").append("autor".equals(tipo) ? " selected" : "").append(">Autor</option>");
-        html.append("<option value='id'").append("id".equals(tipo) ? " selected" : "").append(">ID</option>");
-        html.append("</select>");
-        html.append("</div>");
-
-        html.append("<div class='form-group'>");
-        html.append("<label for='termo'>Busca:</label>");
-        html.append("<input type='text' id='termo' name='termo' value='").append(termo != null ? termo : "").append("' required>");
-        html.append("</div>");
-
-        html.append("<div class='form-actions'>");
-        html.append("<button type='submit' class='btn'>Buscar</button>");
-        html.append("<a href='/livros' class='btn btn-secondary'>Voltar</a>");
-        html.append("</div>");
-        html.append("</form>");
-
-        if (tipo != null && termo != null && !termo.trim().isEmpty()) {
-            try {
-                List<Livro> resultados = switch (tipo) {
-                    case "titulo" -> service.buscarLivroPorTituloNoAcervo(termo);
-                    case "autor" -> service.buscarLivroPorAutorNoAcervo(termo);
-                    case "id" -> List.of(service.buscarLivroPorIDNoAcervo(Integer.parseInt(termo)));
-                    default -> List.of();
-                };
-
-                html.append("<h2>Resultados:</h2>");
-                if (resultados.isEmpty()) {
-                    html.append("<p>Nenhum livro encontrado.</p>");
-                } else {
-                    html.append("<table class='table'>");
-                    html.append("<tr><th>ID</th><th>Título</th><th>Autor</th><th>ISBN</th><th>Status</th></tr>");
-                    for (Livro livro : resultados) {
-                        html.append("<tr>");
-                        html.append("<td>").append(livro.getId()).append("</td>");
-                        html.append("<td>").append(livro.getTitulo()).append("</td>");
-                        html.append("<td>").append(livro.getAutor()).append("</td>");
-                        html.append("<td>").append(livro.getIsbn()).append("</td>");
-                        html.append("<td>").append(livro.isDisponivel() ? "Disponível" : "Emprestado").append("</td>");
-                        html.append("</tr>");
-                    }
-                    html.append("</table>");
-                }
-            } catch (Exception e) {
-                html.append("<div class='error'>Erro na busca: ").append(e.getMessage()).append("</div>");
-            }
-        }
-
-        html.append("</div>");
-        html.append(getFooter());
-        return html.toString();
+        return getHeader("Multa Pendente") +
+                "<div class='container'>" +
+                "<h1>Multa Pendente</h1>" +
+                "<div class='error'>" +
+                "<h3>⚠️ Não é possível devolver o livro</h3>" +
+                "<p>" + mensagemMulta + "</p>" +
+                "</div>" +
+                "<div class='multa-info'>" +
+                "<h3>Informações sobre Multas:</h3>" +
+                "<ul>" +
+                "<li>Multas devem ser pagas antes da devolução</li>" +
+                "<li>Procure a biblioteca para regularizar sua situação</li>" +
+                "<li>Após o pagamento, você poderá devolver o livro</li>" +
+                "</ul>" +
+                "</div>" +
+                "<div class='actions'>" +
+                "<a href='/emprestimos' class='btn btn-secondary'>Voltar aos Empréstimos</a>" +
+                "<a href='/livros' class='btn'>Ir para Acervo</a>" +
+                "</div>" +
+                "</div>" +
+                getFooter();
     }
-
-    public static String renderError(String title, String details) {
-        StringBuilder html = new StringBuilder();
-        html.append(getHeader("Erro - " + title));
-        html.append("<div class='container'>");
-        html.append("<div class='error-page'>");
-        html.append("<h1>❌ ").append(escapeHtml(title)).append("</h1>");
-
-        if (details != null && !details.trim().isEmpty()) {
-            html.append("<div class='error-details'>");
-            html.append("<p>").append(escapeHtml(details)).append("</p>");
-            html.append("</div>");
-        }
-
-        html.append("<div class='error-actions'>");
-        html.append("<a href='/livros' class='btn'>Voltar ao Acervo</a>");
-        html.append("<a href='javascript:history.back()' class='btn btn-secondary'>Voltar</a>");
-        html.append("</div>");
-        html.append("</div>");
-        html.append("</div>");
-        html.append(getFooter());
-        return html.toString();
-    }
-
-
-    public static String escapeHtml(String input) {
-        if (input == null) return "";
-        return input.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&#x27;");
-    }
-
 
     private static String getHeader(String title) {
         return """
@@ -378,9 +290,8 @@ public class LivroView {
                         </style>
                     </head>
                     <body>
-                """.formatted(title);
+                """.formatted("Empréstimos Ativos");
     }
-
 
     private static String getFooter() {
         return """

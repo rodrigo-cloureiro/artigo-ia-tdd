@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.util.List;
+import java.util.Objects;
 
 public class LivroListPage extends BasePage {
 
@@ -46,7 +47,7 @@ public class LivroListPage extends BasePage {
     }
 
     public boolean isLivroPresente(String titulo) {
-        return driver.getPageSource().contains(titulo);
+        return Objects.requireNonNull(driver.getPageSource()).contains(titulo);
     }
 
     public void clickEditarLivro(int livroId) {
@@ -57,7 +58,7 @@ public class LivroListPage extends BasePage {
 
     public void clickEmprestarLivro(int livroId) {
         WebElement emprestar = driver.findElement(
-                By.cssSelector("a[href='/livros/" + livroId + "/emprestar']"));
+                By.cssSelector("a[href='/emprestimos/livros/" + livroId + "/emprestar']"));
         waitAndClick(emprestar);
     }
 

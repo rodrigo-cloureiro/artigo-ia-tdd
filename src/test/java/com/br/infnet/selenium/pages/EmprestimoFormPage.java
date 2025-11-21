@@ -4,6 +4,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import java.util.Objects;
+
 public class EmprestimoFormPage extends BasePage {
 
     @FindBy(id = "prazo")
@@ -32,7 +34,7 @@ public class EmprestimoFormPage extends BasePage {
     }
 
     public int getPrazoAtual() {
-        return Integer.parseInt(prazoInput.getAttribute("value"));
+        return Integer.parseInt(Objects.requireNonNull(prazoInput.getAttribute("value")));
     }
 }
 

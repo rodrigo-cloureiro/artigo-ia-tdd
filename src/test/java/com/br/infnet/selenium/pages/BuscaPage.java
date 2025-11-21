@@ -6,6 +6,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.Select;
 import java.util.List;
+import java.util.Objects;
 
 public class BuscaPage extends BasePage {
 
@@ -57,29 +58,16 @@ public class BuscaPage extends BasePage {
     }
 
     public boolean isMensagemNenhumResultado() {
-        return driver.getPageSource().contains("Nenhum livro encontrado.");
+        return Objects.requireNonNull(driver.getPageSource()).contains("Nenhum livro encontrado.");
     }
 
     @FindBy(css = ".error")
     private WebElement mensagemErro;
 
-    public void waitAndClear(WebElement element) {
-        waitForElement(element);
-        element.clear();
-    }
-
     public void realizarBusca(String tipo, String termo) {
         selecionarTipoBusca(tipo);
         digitarTermo(termo);
         clickBuscar();
-    }
-
-    public boolean isMensagemErroExibida() {
-        try {
-            return isElementDisplayed(mensagemErro);
-        } catch (Exception e) {
-            return false;
-        }
     }
 
     public String getMensagemErro() {
@@ -89,7 +77,7 @@ public class BuscaPage extends BasePage {
     public int getQuantidadeResultados() {
         try {
             List<WebElement> linhas = resultadosTable.findElements(By.cssSelector("tr"));
-            return linhas.size() - 1; // Subtrai 1 para não contar o cabeçalho
+            return linhas.size() - 1;
         } catch (Exception e) {
             return 0;
         }

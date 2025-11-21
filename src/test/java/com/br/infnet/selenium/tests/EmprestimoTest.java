@@ -8,6 +8,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class EmprestimoTest extends TestBase {
@@ -24,7 +26,7 @@ public class EmprestimoTest extends TestBase {
         emprestimoPage.definirPrazo(prazo);
         emprestimoPage.clickEmprestar();
 
-        assertTrue(driver.getCurrentUrl().contains("/emprestimos"));
+        assertTrue(Objects.requireNonNull(driver.getCurrentUrl()).contains("/emprestimos"));
     }
 
     @Test
@@ -37,11 +39,11 @@ public class EmprestimoTest extends TestBase {
         emprestimoPage.definirPrazo(7);
         emprestimoPage.clickEmprestar();
 
-        listPage = new LivroListPage(driver);
+        driver.get(BASE_URL + "/livros");
 
         //não dá para clicar no botão pois ele some após o empréstimo
         //tentativa de burlar a UI
-        driver.navigate().to(BASE_URL + "/livros/5/emprestar");
+        driver.navigate().to(BASE_URL + "/emprestimos/livros/5/emprestar");
         WebElement mensagemErro = driver.findElement(By.className("error-details"));
         assertTrue(mensagemErro.getText().contains("Livro não está disponível para empréstimo"), "Livro não está disponível para empréstimo");
     }
@@ -55,7 +57,7 @@ public class EmprestimoTest extends TestBase {
         EmprestimoFormPage emprestimoPage = new EmprestimoFormPage(driver);
         emprestimoPage.clickCancelar();
 
-        assertTrue(driver.getCurrentUrl().contains("/livros"));
+        assertTrue(Objects.requireNonNull(driver.getCurrentUrl()).contains("/livros"));
     }
 
     @Test
@@ -63,6 +65,6 @@ public class EmprestimoTest extends TestBase {
         LivroListPage listPage = new LivroListPage(driver);
         listPage.clickEmprestimos();
 
-        assertTrue(driver.getCurrentUrl().contains("/emprestimos"));
+        assertTrue(Objects.requireNonNull(driver.getCurrentUrl()).contains("/emprestimos"));
     }
 }

@@ -28,18 +28,6 @@ public abstract class BasePage {
         element.sendKeys(text);
     }
 
-    protected void waitForElement(WebElement element) {
-        wait.until(ExpectedConditions.visibilityOf(element));
-    }
-
-    protected boolean isElementDisplayed(WebElement element) {
-        try {
-            return element.isDisplayed();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     protected String getText(WebElement element) {
         wait.until(ExpectedConditions.visibilityOf(element));
         return element.getText();

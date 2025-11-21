@@ -14,7 +14,7 @@ public class Livro {
     private boolean disponivel;
     double multa;
 
-    public Livro(int id, String titulo, String autor, String isbn) {
+    public Livro (int id, String titulo, String autor, String isbn) {
 
         if (titulo == null || titulo.isBlank()) {
             throw new IllegalArgumentException("Título inválido");

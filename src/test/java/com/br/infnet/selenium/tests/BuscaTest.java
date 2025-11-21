@@ -11,6 +11,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BuscaTest extends TestBase {
@@ -82,7 +84,7 @@ public class BuscaTest extends TestBase {
             "autor, autorInexistente, Nenhum livro encontrado",
     })
     @DisplayName("Deve exibir mensagem quando não encontrar resultados")
-    public void testBuscaSemResultados(String tipo, String termo, String mensagemEsperada) {
+    public void testBuscaSemResultados(String tipo, String termo) {
         buscaPage.realizarBusca(tipo, termo);
         assertTrue(buscaPage.isMensagemNenhumResultado());
         assertEquals(0, buscaPage.getQuantidadeResultados());
@@ -112,7 +114,7 @@ public class BuscaTest extends TestBase {
     @DisplayName("Deve voltar para lista de livros")
     public void testVoltarParaListaLivros() {
         buscaPage.clickVoltar();
-        assertTrue(driver.getCurrentUrl().contains("/livros"));
+        assertTrue(Objects.requireNonNull(driver.getCurrentUrl()).contains("/livros"));
     }
 
     @ParameterizedTest
@@ -124,7 +126,7 @@ public class BuscaTest extends TestBase {
         buscaPage.clickBuscar();
 
         // O formulário deve permanecer na mesma página devido à validação HTML
-        assertTrue(driver.getCurrentUrl().contains("/buscar"));
+        assertTrue(Objects.requireNonNull(driver.getCurrentUrl()).contains("/buscar"));
     }
 
     @Test
